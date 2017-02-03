@@ -24,7 +24,7 @@ class Bucket
  */
 {
 
-	int local_depth;
+    int local_depth;
 	int max_size;
 	int cur_size; // -1 indicates Empty Bucket 
 	int *A; // A dynamic Array 
@@ -57,9 +57,10 @@ void Bucket :: insert(int value)
 	{
 		cur_size +=1;
 		A[cur_size] = value;
+        //cout << " Cur size : " << cur_size << " Max size: " << max_size << endl; 
 	}
 	else
-		cout << "Bucket Overflow" << endl;
+		cout << " \t Error : Bucket Overflow " << endl;
 	/*
 	   if (cur_size == max_size-1)//if cur_size == bucket_size ;means bucket is full
 	   {
@@ -142,15 +143,16 @@ void Bucket :: print()
 {	
 	int i;
 	//cout << "-----------------------------------------" << endl;
-	cout << "--------Printing Bucket----" << endl;
+    cout << " \n Bucket cur size : " << cur_size << " Bucket max size :  " << max_size << endl ;
+	cout << "\n--------Printing Bucket----" << endl;
 	for(i=0;i<=cur_size; i++)
 		cout << A[i] << "\t";
 	cout << "\n--------End of Bucket---" << endl;     
 }
 
 int printMenu() {
-	system("clear");
-	cout << "-----------------------------------------" << endl;
+	//system("clear");
+	cout << "\n-----------------------------------------" << endl;
 	cout << "Extendible Hashing Implementation." << endl;
 	cout << "-----------------------------------------" << endl;
 	cout << "\t\t 1. Insert a Record" << endl;
@@ -162,13 +164,14 @@ int printMenu() {
 	int choice;
 	cout << "\nChoice : ";
 	cin >> choice;
-	cout.flush();
+	//cout.flush();
 	return choice;
 }
 
 int main()
 {
-	int n,value;
+    int n;
+    int value;
 	char ch;
 	cout << "Enter bucket-size : ";
 	cin >> n;
@@ -197,7 +200,7 @@ int main()
 				break;
 
 			case 4:   // show All Records
-					system("clear");
+					//system("clear");
 					B->print();//Here small issue. If I use break in case 4, output is not showing any elements 
 					//break;
 					//cout << endl << "enter to continue ...";
