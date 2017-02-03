@@ -40,11 +40,11 @@ class Bucket
         {
             delete A;
         }
-        
+ };       
         void insert(int value)
         {
                 
-		int hashKey = hashCode(value); // calculates hash key of value
+		int hashKey = hashCode(value, max_size); // calculates hash key of value
 		int posDir = findPos(hashKey); //gets the pos of directory
 						//here we need to code related to bucket of that directory pos.
 		if (cur_size < max_size-1)
@@ -54,7 +54,40 @@ class Bucket
                 }
 		if (cur_size == max_size-1)
 		{
-			int imageA = new int [size];// image of A for splitting
+			Bucket *orinigalBucket, *imageBucket;
+			Directory *dir;
+			if (dir.global_depth > originalBucket.local_depth)
+			{
+				for (int i=0; i <= originalBucket.cur_size; i++)
+				{
+					hashKey = hashCode(originalBucket[i], max_size);
+					if(originalBucket.local_depth == hashKey)
+					{
+						originalBucket.A[++cur_size] = originalBucket.A[i];
+					}
+					else
+						imageBucket.A[++cur_size] = originalBucket.A[i];
+				}
+					originalBucket.local_depth += 1;
+					imageBucket.local_depth +=1; 
+			}
+			else //dir.global_depth == originalBucket.local_depth
+			{
+				
+				for (int i=0; i <= originalBucket.cur_size; i++)
+				{
+					hashKey = hashCode(originalBucket[i], max_size);
+					if(originalBucket.local_depth == hashKey)
+					{
+						originalBucket.A[++cur_size] = originalBucket.A[i];
+					}
+					else
+						imageBucket.A[++cur_size] = originalBucket.A[i];
+				}
+					originalBucket.local_depth += 1;
+					imageBucket.local_depth +=1; 
+			}
+			
 			
 			
         	}
