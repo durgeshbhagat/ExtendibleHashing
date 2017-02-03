@@ -106,19 +106,29 @@ class Bucket
 		//int posDir = findPos(hashKey);
 		//Directory *dir;
 		Bucket *bucket;
-		if(bucket.local_depth == hashKey)
+		if(!isbucketEmpty())
 		{
 			for(int i = 0; i <= bucket.cur_size; i++)
 			{
 				if(bucket.A[i] == value)
-					swap(bucket.A[i],bucket.A[cur_size]);
+					//swap(bucket.A[i],bucket.A[cur_size]);
+				{
+					int temp  = bucket.A[i];
+					bucket.A[i] = bucket.A[cur_size];
+					bucket.A[cur_size] = temp;
+				}
 			}
 			cur_size -= 1;
 		}
+		else
+		cout << "Elt is not found" << endl;
 		
-		
-
         }
+bool Bucket :: isbucketEmpty(Bucket *bucket)
+{
+	if (bucket.cur_size == -1)
+	return true;
+}
   void Bucket :: removeAll()
         {
         }
