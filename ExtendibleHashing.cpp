@@ -200,12 +200,8 @@ int main()
 				break;
 
 			case 4:   // show All Records
-					//system("clear");
-					B->print();//Here small issue. If I use break in case 4, output is not showing any elements 
-					//break;
-					//cout << endl << "enter to continue ...";
-					//ch = getchar();
-					//break;
+					B->print();
+					break;
 			
 			case 5:
 				exit(0);
