@@ -12,25 +12,30 @@ struct node
 };
 
 
-class LinkedList
+class Bucket
 /*
    Data pages
 */
 {
     public:
-        LinkedList(int size =0) : size(t)
+        Bucket(int size =0)
         {  int local_depth =0;
-           head = new node(); // vs node *head = NULL;
-           head ->next = NULL;
-
+           int max_size = size 
+           int cur_size =-1; // -1 indicates Empty Bucket 
+           int head[max_size]; // A dynamic Array 
         }
         ~LinkedList()
         {
             delete head;
         }
         
-        void insert( )
+        void insert(int value)
         {
+                if (cur_size < max_size-1)
+                {
+                    cur_size +=1;
+                    head[cur_size] = value;
+                }
         }
         void remove()
         {
