@@ -105,6 +105,16 @@ class Bucket
 		//int hashKey = hashCode(value, max_size);
 		//int posDir = findPos(hashKey);
 		//Directory *dir;
+		Bucket *bucket;
+		if(bucket.local_depth == hashKey)
+		{
+			for(int i = 0; i <= bucket.cur_size; i++)
+			{
+				if(bucket.A[i] == value)
+					swap(bucket.A[i],bucket.A[cur_size]);
+			}
+			cur_size -= 1;
+		}
 		
 		
 
