@@ -158,24 +158,20 @@ void Bucket :: remove(int value)
     //int posDir = findPos(hashKey);
     //Directory *dir;
     //Bucket *bucket;
-    if(!isbucketEmpty())
+    int pos;
+    pos =search(value);
+    if (pos==-1)
     {
-        for(int i = 0; i <= cur_size; i++)
-        {
-            if(A[i] == value)
-                //swap(bucket.A[i],bucket.A[cur_size]);
-            {
-                int temp  = A[i];
-                A[i] = A[cur_size];
-                A[cur_size] = temp;
-            }
-        }
-        cur_size -= 1;//just decrease cur_size without deleting value
-        if(cur_size == -1)
-            cout << "Merge bucket with imagebucket" << endl;
+        cout << "\n Element :" << value << " not found" << endl;
     }
     else
-        cout << "Elt is not found" << endl;
+    {
+
+        int temp  = A[pos];
+        A[pos] = A[cur_size];
+        A[cur_size] = temp;
+        cur_size -=1 ;
+    }
 
 }
 bool Bucket :: isbucketEmpty()
