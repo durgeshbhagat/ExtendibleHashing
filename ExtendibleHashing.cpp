@@ -48,14 +48,17 @@ class Bucket
  void Bucket :: insert(int value)
         {
                 
-		int hashKey = hashCode(value, max_size); // calculates hash key of value
-		int posDir = findPos(hashKey); //gets the pos of directory
+		//int hashKey = hashCode(value, max_size); // calculates hash key of value
+		//int posDir = findPos(hashKey); //gets the pos of directory
 						//here we need to code related to bucket of that directory pos.
 		if (cur_size < max_size-1)
-                {
+        {
                     cur_size +=1;
                     A[cur_size] = value;
-                }
+        }
+        else
+            cout << "Bucket Overflow"
+        /*
 		if (cur_size == max_size-1)//if cur_size == bucket_size ;means bucket is full
 		{
 			Bucket *orinigalBucket, *imageBucket;
@@ -95,13 +98,13 @@ class Bucket
 			
 			
 			
-        	}
+        	}*/
 }
   void Bucket :: remove(int value)
         { 
-		int hashKey = hashCode(value, max_size);
-		int posDir = findPos(hashKey);
-		Directory *dir;
+		//int hashKey = hashCode(value, max_size);
+		//int posDir = findPos(hashKey);
+		//Directory *dir;
 		
 		
 
