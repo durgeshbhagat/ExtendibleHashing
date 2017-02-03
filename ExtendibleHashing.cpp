@@ -32,7 +32,7 @@ class Bucket
 	Bucket(int size)
 	{  
 		max_size = size;
-		local_depth = global_depth; //Initially
+		local_depth = 0; //Initially
 		cur_size =-1;
 		//A = (int *) malloc(sizeof(int) *size);
 		A = new int [size];
@@ -44,6 +44,7 @@ class Bucket
 	void insert(int);
 	void remove(int);
 	void removeAll();
+	bool isbucketEmpty();
 	void print();
 };       
 void Bucket :: insert(int value)
@@ -154,10 +155,10 @@ int printMenu() {
 	cout << "-----------------------------------------" << endl;
 	cout << "\t\t 1. Insert a Record" << endl;
 	//cout << "\t\t 2. Search a Record" << endl;
-	//cout << "\t\t 3. Delete a Record" << endl;
-	cout << "\t\t 2. Show All Records"<< endl;
-	//cout << "\t\t 5. Delete All Records" << endl;
-	cout << "\t\t 3. Exit" << endl;
+	cout << "\t\t 2. Delete a Record" << endl;
+	cout << "\t\t 3. Delete All Data"<< endl;
+	cout << "\t\t 4. Show All Records" << endl;
+	cout << "\t\t 5. Exit" << endl;
 	int choice;
 	cout << "\nChoice : ";
 	cin >> choice;
@@ -184,15 +185,26 @@ int main()
 					B->insert(value);
 					break;
 				}
-
-			case 2:   // show All Records
+			case 2: // delete data
 				{
+					cout << "Enter value to be deleted" << endl;
+					cin >> value;
+					B->remove(value);
+					break;
+				}
+			case 3: // delete all data
+				B->removeAll();
+				break;
+
+			case 4:   // show All Records
 					system("clear");
-					B->print();
+					B->print();//Here small issue. If I use break in case 4, output is not showing any elements 
+					//break;
 					//cout << endl << "enter to continue ...";
 					//ch = getchar();
-				}
-			case 3:
+					//break;
+			
+			case 5:
 				exit(0);
 		}
 	}
