@@ -38,7 +38,7 @@ class Bucket
         }
         ~Bucket()
         {
-            delete A;
+            delete[] A;
         }
 	void insert(int);
 	void remove(int);
