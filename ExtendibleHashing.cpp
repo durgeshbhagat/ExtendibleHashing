@@ -17,16 +17,22 @@ class Bucket
    Data pages
 */
 {
+    
+	int local_depth;
+        int max_size;
+        int cur_size; // -1 indicates Empty Bucket 
+        int *A; // A dynamic Array 
     public:
-        Bucket(int size =0)
-        {  int local_depth =0;
-           int max_size = size 
-           int cur_size =-1; // -1 indicates Empty Bucket 
-           int A[max_size]; // A dynamic Array 
+        Bucket(int size)
+        {  
+		max_size = size;
+		local_depth =0;
+		cur_size =-1;
+		A = (int *) malloc(sizeof(int) *size);
         }
-        ~LinkedList()
+        ~Bucket()
         {
-            delete head;
+            delete A;
         }
         
         void insert(int value)
@@ -34,7 +40,7 @@ class Bucket
                 if (cur_size < max_size-1)
                 {
                     cur_size +=1;
-                    head[cur_size] = value;
+                    A[cur_size] = value;
                 }
         }
         void remove()
@@ -47,14 +53,14 @@ class Bucket
         void print()
         {	
 		int i;
-		cout << "-----------------------------------------" << endl;
+		//cout << "-----------------------------------------" << endl;
 		cout << "--------Printing Bucket----" << endl;
-		for(i=0;i<cur_size; i++)
-			cout << A[i] << '\t';
-		cout << "--------End of Bucket---" << endl;     
+		for(i=0;i<=cur_size; i++)
+			cout << A[i] << "\t";
+		cout << "\n--------End of Bucket---" << endl;     
 	}
 
- }
+ };
 
 
 int printMenu() {
@@ -63,11 +69,11 @@ int printMenu() {
 	cout << "Extendible Hashing Implementation." << endl;
 	cout << "-----------------------------------------" << endl;
 	cout << "\t\t 1. Insert a Record" << endl;
-	cout << "\t\t 2. Search a Record" << endl;
-	cout << "\t\t 3. Delete a Record" << endl;
-	cout << "\t\t 4. Show All Records"<< endl;
-	cout << "\t\t 5. Delete All Records" << endl;
-	cout << "\t\t 6. Exit" << endl;
+	//cout << "\t\t 2. Search a Record" << endl;
+	//cout << "\t\t 3. Delete a Record" << endl;
+	cout << "\t\t 2. Show All Records"<< endl;
+	//cout << "\t\t 5. Delete All Records" << endl;
+	cout << "\t\t 3. Exit" << endl;
 	int choice;
 	cout << "\nChoice : ";
 	cin >> choice;
@@ -99,9 +105,11 @@ int main()
 			        {
 					system("clear");
 					B->print();
-					ch = getchar();
-					break;
+					//cout << endl << "enter to continue ...";
+					//ch = getchar();
 				}
+			case 3:
+				exit(0);
 		}
 	}
 
