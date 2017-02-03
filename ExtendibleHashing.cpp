@@ -26,7 +26,7 @@ class Bucket
         Bucket(int size)
         {  
 		max_size = size;
-		local_depth =0;
+		local_depth = global_depth; //Initially
 		cur_size =-1;
 		A = (int *) malloc(sizeof(int) *size);
         }
