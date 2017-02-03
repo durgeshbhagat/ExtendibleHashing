@@ -1,14 +1,15 @@
 #include<cstdio>
 #include<iostream>
 #include<cstdlib>
+//#include <array>
 
 using namespace std;
 
 // Single block structure for LinkList
 struct node
 {
-        int data;
-        node *next;
+	int data;
+	node *next;
 };
 
 int hashCode(int number, int bucket_size) //returns hashKey of a number
@@ -20,127 +21,131 @@ int hashCode(int number, int bucket_size) //returns hashKey of a number
 class Bucket
 /*
    Data pages
-*/
+ */
 {
-    
+
 	int local_depth;
-        int max_size;
-        int cur_size; // -1 indicates Empty Bucket 
-        int *A; // A dynamic Array 
-    public:
-        Bucket(int size)
-        {  
+	int max_size;
+	int cur_size; // -1 indicates Empty Bucket 
+	int *A; // A dynamic Array 
+	public:
+	Bucket(int size)
+	{  
 		max_size = size;
 		local_depth = global_depth; //Initially
 		cur_size =-1;
 		//A = (int *) malloc(sizeof(int) *size);
 		A = new int [size];
-        }
-        ~Bucket()
-        {
-            delete[] A;
-        }
+	}
+	~Bucket()
+	{
+		delete[] A;
+	}
 	void insert(int);
 	void remove(int);
 	void removeAll();
 	void print();
- };       
- void Bucket :: insert(int value)
-        {
-                
-		//int hashKey = hashCode(value, max_size); // calculates hash key of value
-		//int posDir = findPos(hashKey); //gets the pos of directory
-						//here we need to code related to bucket of that directory pos.
-		if (cur_size < max_size-1)
-        {
-                    cur_size +=1;
-                    A[cur_size] = value;
-        }
-        else
-            cout << "Bucket Overflow"
-        /*
-		if (cur_size == max_size-1)//if cur_size == bucket_size ;means bucket is full
-		{
-			Bucket *orinigalBucket, *imageBucket;
-			Directory *dir;
-			if (dir.global_depth > originalBucket.local_depth)
-			{
-				for (int i=0; i <= originalBucket.cur_size; i++) // we have to calculate hashKey of all values in original bucket for distribution
-				{
-					hashKey = hashCode(originalBucket[i], max_size);
-					if(originalBucket.local_depth == hashKey)
-					{
-						originalBucket.A[++cur_size] = originalBucket.A[i];
-					}
-					else
-						imageBucket.A[++cur_size] = originalBucket.A[i];
-				}
-					originalBucket.local_depth += 1;
-					imageBucket.local_depth +=1; 
-			}
-			else //dir.global_depth == originalBucket.local_depth
-			{
-				
-				for (int i=0; i <= originalBucket.cur_size; i++)
-				{
-					hashKey = hashCode(originalBucket[i], max_size);
-					if(originalBucket.local_depth == hashKey)
-					{
-						originalBucket.A[++cur_size] = originalBucket.A[i];
-					}
-					else
-						imageBucket.A[++cur_size] = originalBucket.A[i];
-				}
-					originalBucket.local_depth += 1;
-					imageBucket.local_depth +=1; 
-				//splitting directory code here
-			}
-			
-			
-			
-        	}*/
-}
-  void Bucket :: remove(int value)
-        { 
-		//int hashKey = hashCode(value, max_size);
-		//int posDir = findPos(hashKey);
-		//Directory *dir;
-		Bucket *bucket;
-		if(!isbucketEmpty())
-		{
-			for(int i = 0; i <= bucket.cur_size; i++)
-			{
-				if(bucket.A[i] == value)
-					//swap(bucket.A[i],bucket.A[cur_size]);
-				{
-					int temp  = bucket.A[i];
-					bucket.A[i] = bucket.A[cur_size];
-					bucket.A[cur_size] = temp;
-				}
-			}
-			cur_size -= 1;
-		}
-		else
-		cout << "Elt is not found" << endl;
-		
-        }
-bool Bucket :: isbucketEmpty(Bucket *bucket)
+};       
+void Bucket :: insert(int value)
 {
-	if (bucket.cur_size == -1)
-	return true;
-}
-  void Bucket :: removeAll()
-        {
-        }
- void Bucket :: print()
-        {	
-		int i;
-		//cout << "-----------------------------------------" << endl;
-		cout << "--------Printing Bucket----" << endl;
-		for(i=0;i<=cur_size; i++)
-			cout << A[i] << "\t";
-		cout << "\n--------End of Bucket---" << endl;     
+
+	//int hashKey = hashCode(value, max_size); // calculates hash key of value
+	//int posDir = findPos(hashKey); //gets the pos of directory
+	//here we need to code related to bucket of that directory pos.
+	if (cur_size < max_size-1)
+	{
+		cur_size +=1;
+		A[cur_size] = value;
 	}
+	else
+		cout << "Bucket Overflow" << endl;
+	/*
+	   if (cur_size == max_size-1)//if cur_size == bucket_size ;means bucket is full
+	   {
+	   Bucket *orinigalBucket, *imageBucket;
+	   Directory *dir;
+	   if (dir.global_depth > originalBucket.local_depth)
+	   {
+	   for (int i=0; i <= originalBucket.cur_size; i++) // we have to calculate hashKey of all values in original bucket for distribution
+	   {
+	   hashKey = hashCode(originalBucket[i], max_size);
+	   if(originalBucket.local_depth == hashKey)
+	   {
+	   originalBucket.A[++cur_size] = originalBucket.A[i];
+	   }
+	   else
+	   imageBucket.A[++cur_size] = originalBucket.A[i];
+	   }
+	   originalBucket.local_depth += 1;
+	   imageBucket.local_depth +=1; 
+	   }
+	   else //dir.global_depth == originalBucket.local_depth
+	   {
+
+	   for (int i=0; i <= originalBucket.cur_size; i++)
+	   {
+	   hashKey = hashCode(originalBucket[i], max_size);
+	   if(originalBucket.local_depth == hashKey)
+	   {
+	   originalBucket.A[++cur_size] = originalBucket.A[i];
+	   }
+	   else
+	   imageBucket.A[++cur_size] = originalBucket.A[i];
+	   }
+	   originalBucket.local_depth += 1;
+	   imageBucket.local_depth +=1; 
+	//splitting directory code here
+	}
+
+
+
+	}*/
+}
+void Bucket :: remove(int value)
+{ 
+	//int hashKey = hashCode(value, max_size);
+	//int posDir = findPos(hashKey);
+	//Directory *dir;
+	//Bucket *bucket;
+	if(!isbucketEmpty())
+	{
+		for(int i = 0; i <= cur_size; i++)
+		{
+			if(A[i] == value)
+				//swap(bucket.A[i],bucket.A[cur_size]);
+			{
+				int temp  = A[i];
+				A[i] = A[cur_size];
+				A[cur_size] = temp;
+			}
+		}
+		cur_size -= 1;//just decrease cur_size without deleting value
+		if(cur_size == -1)
+			cout << "Merge bucket with imagebucket" << endl;
+	}
+	else
+		cout << "Elt is not found" << endl;
+
+}
+bool Bucket :: isbucketEmpty()
+{
+	//if (bucket.cur_size == -1)
+	return cur_size == -1;
+}
+void Bucket :: removeAll()
+{
+	cur_size = -1;	
+	delete[] A;
+}
+void Bucket :: print()
+{	
+	int i;
+	//cout << "-----------------------------------------" << endl;
+	cout << "--------Printing Bucket----" << endl;
+	for(i=0;i<=cur_size; i++)
+		cout << A[i] << "\t";
+	cout << "\n--------End of Bucket---" << endl;     
+}
 
 int printMenu() {
 	system("clear");
@@ -173,15 +178,15 @@ int main()
 		switch(choice) {
 			case 1:   // Insert a record
 				{
-					
+
 					cout << "Enter value to be added : ";
 					cin >> value;
 					B->insert(value);
 					break;
 				}
-			
+
 			case 2:   // show All Records
-			        {
+				{
 					system("clear");
 					B->print();
 					//cout << endl << "enter to continue ...";
