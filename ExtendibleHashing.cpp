@@ -11,6 +11,11 @@ struct node
         node *next;
 };
 
+int hashCode(int number, int bucket_size) //returns hashKey of a number
+{
+	int hashKey = number % bucket_size;
+	return hashKey;
+}
 
 class Bucket
 /*
@@ -28,7 +33,8 @@ class Bucket
 		max_size = size;
 		local_depth = global_depth; //Initially
 		cur_size =-1;
-		A = (int *) malloc(sizeof(int) *size);
+		//A = (int *) malloc(sizeof(int) *size);
+		A = new int [size];
         }
         ~Bucket()
         {
@@ -48,8 +54,10 @@ class Bucket
                 }
 		if (cur_size == max_size-1)
 		{
-			int 
-        }
+			int imageA = new int [size];// image of A for splitting
+			
+			
+        	}
         void remove()
         { 
 
