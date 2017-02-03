@@ -40,8 +40,12 @@ class Bucket
         {
             delete A;
         }
+	void insert(int);
+	void remove(int);
+	void removeAll();
+	void print();
  };       
-        void insert(int value)
+ void Bucket :: insert(int value)
         {
                 
 		int hashKey = hashCode(value, max_size); // calculates hash key of value
@@ -52,13 +56,13 @@ class Bucket
                     cur_size +=1;
                     A[cur_size] = value;
                 }
-		if (cur_size == max_size-1)
+		if (cur_size == max_size-1)//if cur_size == bucket_size ;means bucket is full
 		{
 			Bucket *orinigalBucket, *imageBucket;
 			Directory *dir;
 			if (dir.global_depth > originalBucket.local_depth)
 			{
-				for (int i=0; i <= originalBucket.cur_size; i++)
+				for (int i=0; i <= originalBucket.cur_size; i++) // we have to calculate hashKey of all values in original bucket for distribution
 				{
 					hashKey = hashCode(originalBucket[i], max_size);
 					if(originalBucket.local_depth == hashKey)
@@ -86,19 +90,26 @@ class Bucket
 				}
 					originalBucket.local_depth += 1;
 					imageBucket.local_depth +=1; 
+				//splitting directory code here
 			}
 			
 			
 			
         	}
-        void remove()
+}
+  void Bucket :: remove(int value)
         { 
+		int hashKey = hashCode(value, max_size);
+		int posDir = findPos(hashKey);
+		Directory *dir;
+		
+		
 
         }
-        void removeAll()
+  void Bucket :: removeAll()
         {
         }
-        void print()
+ void Bucket :: print()
         {	
 		int i;
 		//cout << "-----------------------------------------" << endl;
@@ -107,9 +118,6 @@ class Bucket
 			cout << A[i] << "\t";
 		cout << "\n--------End of Bucket---" << endl;     
 	}
-
- };
-
 
 int printMenu() {
 	system("clear");
