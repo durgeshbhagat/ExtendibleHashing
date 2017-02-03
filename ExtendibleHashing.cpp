@@ -18,6 +18,29 @@ int hashCode(int number, int bucket_size) //returns hashKey of a number
 	return hashKey;
 }
 
+class Directory
+/* 
+
+*/ Directory Pages
+{  int global_depth;
+   Bucket *D; // Dynamic Bucket array
+   public:
+        Directory(int size)
+        {
+        }
+        ~Directory()
+        {
+        }
+        void search_key(int key);
+        void add_key(int key);
+        void remove_key(int key);
+        void double_directory();
+        void status_directory();
+
+};
+
+
+
 class Bucket
 /*
    Data pages
@@ -29,23 +52,23 @@ class Bucket
 	int cur_size; // -1 indicates Empty Bucket 
 	int *A; // A dynamic Array 
 	public:
-	Bucket(int size)
-	{  
-		max_size = size;
-		local_depth = 0; //Initially
-		cur_size =-1;
-		//A = (int *) malloc(sizeof(int) *size);
-		A = new int [size];
-	}
-	~Bucket()
-	{
-		delete[] A;
-	}
-	void insert(int);
-	void remove(int);
-	void removeAll();
-	bool isbucketEmpty();
-	void print();
+        Bucket(int size)
+        {  
+            max_size = size;
+            local_depth = 0; //Initially
+            cur_size =-1;
+            //A = (int *) malloc(sizeof(int) *size);
+            A = new int [size];
+        }
+        ~Bucket()
+        {
+            delete[] A;
+        }
+        void insert(int);
+        void remove(int);
+        void removeAll();
+        bool isbucketEmpty();
+        void print();
 };       
 void Bucket :: insert(int value)
 {
