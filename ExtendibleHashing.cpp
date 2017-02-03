@@ -37,11 +37,18 @@ class Bucket
         
         void insert(int value)
         {
-                if (cur_size < max_size-1)
+                
+		int hashKey = hashCode(value); // calculates hash key of value
+		int posDir = findPos(hashKey); //gets the pos of directory
+						//here we need to code related to bucket of that directory pos.
+		if (cur_size < max_size-1)
                 {
                     cur_size +=1;
                     A[cur_size] = value;
                 }
+		if (cur_size == max_size-1)
+		{
+			int 
         }
         void remove()
         { 
