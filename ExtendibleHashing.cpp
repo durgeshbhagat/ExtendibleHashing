@@ -179,7 +179,7 @@ class Directory
  */
 {  	
 	Bucket *D; // Dynamic Bucket array
-	
+	int bucket_size;//No of buckets
 	
 	public:
 		int global_depth;
@@ -187,6 +187,7 @@ class Directory
 		{
 			global_depth = log2(size);
 			D = new Bucket(size);
+			bucket_size = size;
 		}
 		~Directory()
 		{
@@ -203,7 +204,18 @@ class Directory
 
 void Directory :: search_key(int key)
 {
+	
+	int hashKey = hashCode(key,bucket_size);
+	Bucket bucket = D[hashKey];
+	bucket.search(key);
 		
+}
+void Directory :: add_key(int key)
+{
+	int hashKey = hashCode(key,bucket_size);
+	Bucket bucket = D[hashKey];
+	//D[hashKey] = D->insert(key);
+	bucket.insert(key);
 }
 
 int printMenu() {
@@ -231,8 +243,8 @@ int main()
 	char ch;
 	cout << "Enter bucket-size : ";
 	cin >> n;
-	Directory dir(n);
-	Bucket *B = new Bucket(n);
+	Directory *B = new Directory(n);//segmentation fault occurs
+	//Bucket *B = new Bucket(n);
 	while(true) {
 		int choice = printMenu();
 		ch = getchar();  // eat newline
@@ -242,7 +254,8 @@ int main()
 
 					cout << "Enter value to be added : ";
 					cin >> value;
-					B->insert(value);
+					//B->insert(value);
+					B->add_key(value);
 					break;
 				}
 
@@ -251,23 +264,24 @@ int main()
 
 					cout << "Enter value to be searched : ";
 					cin >> value;
-					B->search(value);
+					//B->search(value);
+					B->search_key(value);
 					break;
 				}
 			case 3: // delete data
 				{
 					cout << "Enter value to be deleted" << endl;
 					cin >> value;
-					B->remove(value);
+					//B->remove(value);
 					break;
 				}
 			case 4: // delete all data
 				{
-					B->removeAll();
+					//B->removeAll();
 					break;
 				}
 			case 5:   // show All Records
-				B->print();
+				//B->print();
 				break;
 
 			case 6:
