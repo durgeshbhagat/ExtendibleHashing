@@ -19,40 +19,6 @@ int hashCode(int number, int bucket_size) //returns hashKey of a number
 	return hashKey;
 }
 
-class Directory
-/* 
-   Directory Pages
- */
-{  	
-	Bucket **D; // Dynamic Bucket array
-	
-	
-	public:
-		int global_depth;
-		Directory(int size)
-		{
-			global_depth = log2(size);
-			D = new Bucket[size];
-			for (int i = 0; i < size; i++)
-                		D[i] = NULL;
-		}
-		~Directory()
-		{
-			            
-            		delete[] D;
-		}
-		void search_key(int key);
-		void add_key(int key);
-		void remove_key(int key);
-		void double_directory();
-		void status_directory();
-
-};
-
-void Directory :: search_key(int key)
-{
-		
-}
 
 class Bucket
 /*
@@ -68,7 +34,7 @@ class Bucket
 	Bucket(int size)
 	{  
 		max_size = size;
-		local_depth = global_depth; //Initially
+		local_depth = 0; //Initially
 		cur_size =-1;
 		//A = (int *) malloc(sizeof(int) *size);
 		A = new int [size];
@@ -205,6 +171,39 @@ void Bucket :: print()
 	for(i=0;i<=cur_size; i++)
 		cout << A[i] << "\t";
 	cout << "\n--------End of Bucket---" << endl;     
+}
+
+class Directory
+/* 
+   Directory Pages
+ */
+{  	
+	Bucket *D; // Dynamic Bucket array
+	
+	
+	public:
+		int global_depth;
+		Directory(int size) 
+		{
+			global_depth = log2(size);
+			D = new Bucket(size);
+		}
+		~Directory()
+		{
+			            
+            		delete[] D;
+		}
+		void search_key(int key);
+		void add_key(int key);
+		void remove_key(int key);
+		void double_directory();
+		void status_directory();
+
+};
+
+void Directory :: search_key(int key)
+{
+		
 }
 
 int printMenu() {
