@@ -13,9 +13,11 @@ struct node
 	node *next;
 };
 
-int hashCode(int number, int bucket_size) //returns hashKey of a number
+int hashCode(int number, int dir_size) //returns hashKey of a number
 {
-	int hashKey = number % bucket_size;
+    cout << "key :" << number << " dir_size : " << dir_size << endl;
+    int hashKey = number % dir_size;
+    cout << "hashkey :: " << hashKey << endl;
 	return hashKey;
 }
 
@@ -179,20 +181,24 @@ class Directory
  */
 {  	
 	Bucket *D; // Dynamic Bucket array
-	int bucket_size;//No of buckets
+	int dir_size;//No of of buckets in a direcory
 	
 	public:
 		int global_depth;
-		Directory(int size) 
+        int i;
+        //int dir_size;
+		Directory(int dir_size,int bucket_size) 
 		{
-			global_depth = log2(size);
-			D = new Bucket(size);
-			bucket_size = size;
+            dir_size = dir_size;
+			global_depth = log2(dir_size);
+			D = new Bucket(dir_size);
+            for (i=0;i<bucket_size;i++)
+                D[i]=Bucket(bucket_size);
 		}
 		~Directory()
 		{
 			            
-            		delete[] D;
+            		//delete[] D;
 		}
 		void search_key(int key);
 		void add_key(int key);
@@ -202,20 +208,32 @@ class Directory
 
 };
 
+void Directory :: status_directory()
+{
+    int i,j;
+    for (int i=0;i<dir_size;i++)
+    {
+        cout << "Printing Dir :" << i <<endl;
+        D[i].print(); 
+    }
+}
 void Directory :: search_key(int key)
 {
 	
-	int hashKey = hashCode(key,bucket_size);
+	int hashKey = hashCode(key,dir_size);
 	Bucket bucket = D[hashKey];
 	bucket.search(key);
 		
 }
 void Directory :: add_key(int key)
 {
-	int hashKey = hashCode(key,bucket_size);
-	Bucket bucket = D[hashKey];
+    cout << " Line 227 " <<endl;
+	int hashKey = hashCode(key, dir_size);
+	//Bucket bucket = D[hashKey];
 	//D[hashKey] = D->insert(key);
-	bucket.insert(key);
+    cout << " Line 230 ::"  << endl;
+	D[hashKey].insert(key);
+    cout << "Line 231 ::" << endl;
 }
 
 int printMenu() {
@@ -238,12 +256,14 @@ int printMenu() {
 
 int main()
 {
-	int n;
+	int dir_size, bucket_size;
 	int value;
 	char ch;
-	cout << "Enter bucket-size : ";
-	cin >> n;
-	Directory *B = new Directory(n);//segmentation fault occurs
+	cout << "Enter Directory-size : ";
+	cin >> dir_size;
+    cout << " \n Enter the bucket size : " ;
+    cin >> bucket_size;
+	Directory *B = new Directory(dir_size,bucket_size);//segmentation fault occurs
 	//Bucket *B = new Bucket(n);
 	while(true) {
 		int choice = printMenu();
@@ -281,6 +301,7 @@ int main()
 					break;
 				}
 			case 5:   // show All Records
+                B->status_directory();
 				//B->print();
 				break;
 
