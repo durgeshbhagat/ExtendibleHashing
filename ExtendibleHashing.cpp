@@ -36,11 +36,12 @@ class Bucket
 	public:
 	Bucket(int size)
 	{  
-		max_size = size;
-		local_depth = 0; //Initially
-		cur_size =-1;
-		//A = (int *) malloc(sizeof(int) *size);
-		A = new int[size];
+		this->max_size = size;
+		this->local_depth = 0; //Initially
+		this->cur_size =-1;
+		this->A = (int *) malloc(sizeof(int) *size);
+        cout << "this ->A :  " <<this->A <<  "  this->cur_size: " << this->cur_size << " this->max_size  : " << this->max_size << endl; 
+		//this->A = new int[size];
 	}
 	~Bucket()
 	{
@@ -59,6 +60,7 @@ void Bucket :: insert(int value)
 	//int hashKey = hashCode(value, max_size); // calculates hash key of value
 	//int posDir = findPos(hashKey); //gets the pos of directory
 	//here we need to code related to bucket of that directory pos.
+    cout << " this->cur_size : " << this->cur_size <<" \t this->max_size : " << this->max_size << " \t this->A : " << this->A<< endl; 
 	if (this->cur_size < this->max_size-1)
 	{
 		this->cur_size +=1;
@@ -114,8 +116,8 @@ int Bucket :: search(int value)
 {
 	bool found_flag=false;
 	int i =0;
-	for(i=0;i<=cur_size;i++)
-	{    if( A[i] == value)
+	for(i=0;i<=this->cur_size;i++)
+	{    if( this->A[i] == value)
 		{
 			found_flag=true;
 			break;
@@ -148,21 +150,21 @@ void Bucket :: remove(int value)
 	else
 	{
 
-		int temp  = A[pos];
-		A[pos] = A[cur_size];
-		A[cur_size] = temp;
-		cur_size -=1 ;
+		int temp  = this->A[pos];
+		this->A[pos] = this->A[this->cur_size];
+		this->A[this->cur_size] = temp;
+		this->cur_size -=1 ;
 	}
 
 }
 bool Bucket :: isbucketEmpty()
 {
-	//if (bucket.cur_size == -1)
-	return cur_size == -1;
+	//if (bucket->cur_size == -1)
+	return this->cur_size == -1;
 }
 void Bucket :: removeAll()
 {
-	cur_size = -1;	
+	this->cur_size = -1;	
 	//delete[] A;
 }
 void Bucket :: print()
@@ -172,8 +174,8 @@ void Bucket :: print()
 	cout << " \t Bucket cur size : " << cur_size << " Bucket max size :  " << max_size << endl ;
 	cout << "\t\t--------Printing Bucket----" << endl;
     cout << "\t\t";
-	for(i=0;i<=cur_size; i++)
-		cout  << A[i] << "\t";
+	for(i=0;i<=this->cur_size; i++)
+		cout  << this->A[i] << "\t";
 	cout << "\n\t\t--------End of Bucket---" << endl;     
 }
 
@@ -260,14 +262,18 @@ int printMenu() {
 int main()
 {
 	int dir_size, bucket_size;
-	int value;
+	int value,index,i;
 	char ch;
 	cout << "Enter Directory-size : ";
 	cin >> dir_size;
     cout << " \n Enter the bucket size : " ;
     cin >> bucket_size;
-	Directory *B = new Directory(dir_size,bucket_size);//segmentation fault occurs
-	//Bucket *B = new Bucket(n);
+	//Directory *B = new Directory(dir_size,bucket_size);//segmentation fault occurs
+	Bucket *D;
+
+    D = (Bucket *)malloc(sizeof(Bucket)*dir_size);
+    for (i=0;i<dir_size;i++)
+        D[i]= new Bucket(bucket_size);
 	while(true) {
 		int choice = printMenu();
 		ch = getchar();  // eat newline
@@ -275,37 +281,41 @@ int main()
 			case 1:   // Insert a record
 				{
 
-					cout << "Enter value to be added : ";
-					cin >> value;
+					cout << "Enter value to be added  and index of the D  ";
+					cin >> value>>index;
 					//B->insert(value);
-					B->add_key(value);
+					D[index].insert(value);
 					break;
 				}
 
 			case 2:   // Search a record
 				{
 
-					cout << "Enter value to be searched : ";
-					cin >> value;
+					cout << "Enter value to be searched :nd the index of the D ";
+					cin >> value >> index;
 					//B->search(value);
-					B->search_key(value);
+					D[index].search(value);
 					break;
 				}
 			case 3: // delete data
 				{
-					cout << "Enter value to be deleted" << endl;
-					cin >> value;
-					//B->remove(value);
+					cout << "Enter value to be deleted and the index of the D: " << endl;
+					cin >> value >> index;
+					D[index].remove(value);
 					break;
 				}
 			case 4: // delete all data
 				{
-					//B->removeAll();
+                    cout << " Enter the index of D to be deleted all data : " << endl ;
+                    cin >> index;
+					D[index].removeAll();
 					break;
 				}
 			case 5:   // show All Records
-                B->status_directory();
-				//B->print();
+                    //B->status_directory();
+                    cout<< " Enter the index of D to be displayed : " ;
+                    cin >> index;
+                    D[index].print();
 				break;
 
 			case 6:
