@@ -39,7 +39,7 @@ class Bucket
 		local_depth = 0; //Initially
 		cur_size =-1;
 		//A = (int *) malloc(sizeof(int) *size);
-		A = new int [size];
+		A = new int[size];
 	}
 	~Bucket()
 	{
@@ -191,8 +191,8 @@ class Directory
 		{
             dir_size = dir_size;
 			global_depth = log2(dir_size);
-			D = new Bucket(dir_size);
-            for (i=0;i<bucket_size;i++)
+			D = (Bucket *)malloc(sizeof(Bucket)*dir_size);
+            for (i=0;i<dir_size;i++)
                 D[i]=Bucket(bucket_size);
 		}
 		~Directory()
