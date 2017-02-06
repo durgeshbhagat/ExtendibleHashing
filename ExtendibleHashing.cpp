@@ -15,10 +15,10 @@ struct node
 
 int hashCode(int number, int dir_size) //returns hashKey of a number
 {
-    cout << " Line 18 : ";
-    cout << "key :" << number << " dir_size : " << dir_size << endl;
+    //cout << " Line 18 : ";
+    //cout << "key :" << number << " dir_size : " << dir_size << endl;
     int hashKey = number % dir_size;
-    cout << "hashkey :: " << hashKey << endl;
+    //cout << "hashkey :: " << hashKey << endl;
 	return hashKey;
 }
 
@@ -59,10 +59,10 @@ void Bucket :: insert(int value)
 	//int hashKey = hashCode(value, max_size); // calculates hash key of value
 	//int posDir = findPos(hashKey); //gets the pos of directory
 	//here we need to code related to bucket of that directory pos.
-	if (cur_size < max_size-1)
+	if (this->cur_size < this->max_size-1)
 	{
-		cur_size +=1;
-		A[cur_size] = value;
+		this->cur_size +=1;
+		this->A[this->cur_size] = value;
 		//cout << " Cur size : " << cur_size << " Max size: " << max_size << endl; 
 	}
 	else
@@ -169,11 +169,12 @@ void Bucket :: print()
 {	
 	int i;
 	//cout << "-----------------------------------------" << endl;
-	cout << " \n Bucket cur size : " << cur_size << " Bucket max size :  " << max_size << endl ;
-	cout << "\n--------Printing Bucket----" << endl;
+	cout << " \t Bucket cur size : " << cur_size << " Bucket max size :  " << max_size << endl ;
+	cout << "\t\t--------Printing Bucket----" << endl;
+    cout << "\t\t";
 	for(i=0;i<=cur_size; i++)
-		cout << A[i] << "\t";
-	cout << "\n--------End of Bucket---" << endl;     
+		cout  << A[i] << "\t";
+	cout << "\n\t\t--------End of Bucket---" << endl;     
 }
 
 class Directory
@@ -233,9 +234,9 @@ void Directory :: add_key(int key)
 	int hashKey = hashCode(key, size);
 	//Bucket bucket = D[hashKey];
 	//D[hashKey] = D->insert(key);
-    cout << " Line 230 ::"  << endl;
+    //cout << " Line 230 ::"  << endl;
 	D[hashKey].insert(key);
-    cout << "Line 231 ::" << endl;
+    //cout << "Line 231 ::" << endl;
 }
 
 int printMenu() {
