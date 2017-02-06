@@ -269,11 +269,13 @@ int main()
     cout << " \n Enter the bucket size : " ;
     cin >> bucket_size;
 	//Directory *B = new Directory(dir_size,bucket_size);//segmentation fault occurs
-	Bucket *D;
+	Bucket **D;
 
-    D = (Bucket *)malloc(sizeof(Bucket)*dir_size);
-    for (i=0;i<dir_size;i++)
-        D[i]= new Bucket(bucket_size);
+    D = (Bucket **)malloc(sizeof(Bucket *)*dir_size);
+    for (i=0;i<dir_size;i++){
+        D[i] = (Bucket *)new Bucket(bucket_size);
+    }
+    
 	while(true) {
 		int choice = printMenu();
 		ch = getchar();  // eat newline
@@ -284,7 +286,7 @@ int main()
 					cout << "Enter value to be added  and index of the D  ";
 					cin >> value>>index;
 					//B->insert(value);
-					D[index].insert(value);
+					D[index]->insert(value);
 					break;
 				}
 
@@ -294,35 +296,35 @@ int main()
 					cout << "Enter value to be searched :nd the index of the D ";
 					cin >> value >> index;
 					//B->search(value);
-					D[index].search(value);
+					D[index]->search(value);
 					break;
 				}
 			case 3: // delete data
 				{
 					cout << "Enter value to be deleted and the index of the D: " << endl;
 					cin >> value >> index;
-					D[index].remove(value);
+					D[index]->remove(value);
 					break;
 				}
 			case 4: // delete all data
 				{
                     cout << " Enter the index of D to be deleted all data : " << endl ;
                     cin >> index;
-					D[index].removeAll();
+					D[index]->removeAll();
 					break;
 				}
 			case 5:   // show All Records
                     //B->status_directory();
                     cout<< " Enter the index of D to be displayed : " ;
                     cin >> index;
-                    D[index].print();
+                    D[index]->print();
 				break;
 
 			case 6:
 				exit(0);
 		}
 	}
-
+   
 	return 0;
 }
 
