@@ -189,7 +189,7 @@ class Directory
         //int dir_size;
 		Directory(int dir_size,int bucket_size) 
 		{
-            dir_size = dir_size;
+            this->dir_size = dir_size;
 			global_depth = log2(dir_size);
 			D = new Bucket(dir_size);
             for (i=0;i<bucket_size;i++)
