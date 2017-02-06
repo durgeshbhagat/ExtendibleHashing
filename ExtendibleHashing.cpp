@@ -15,6 +15,7 @@ struct node
 
 int hashCode(int number, int dir_size) //returns hashKey of a number
 {
+    cout << " Line 18 : ";
     cout << "key :" << number << " dir_size : " << dir_size << endl;
     int hashKey = number % dir_size;
     cout << "hashkey :: " << hashKey << endl;
@@ -39,7 +40,7 @@ class Bucket
 		local_depth = 0; //Initially
 		cur_size =-1;
 		//A = (int *) malloc(sizeof(int) *size);
-		A = new int [size];
+		A = new int[size];
 	}
 	~Bucket()
 	{
@@ -191,8 +192,8 @@ class Directory
 		{
             this->dir_size = dir_size;
 			global_depth = log2(dir_size);
-			D = new Bucket(dir_size);
-            for (i=0;i<bucket_size;i++)
+			D = (Bucket *)malloc(sizeof(Bucket)*dir_size);
+            for (i=0;i<dir_size;i++)
                 D[i]=Bucket(bucket_size);
 		}
 		~Directory()
@@ -228,7 +229,8 @@ void Directory :: search_key(int key)
 void Directory :: add_key(int key)
 {
     cout << " Line 227 " <<endl;
-	int hashKey = hashCode(key, dir_size);
+     int size = this->dir_size;
+	int hashKey = hashCode(key, size);
 	//Bucket bucket = D[hashKey];
 	//D[hashKey] = D->insert(key);
     cout << " Line 230 ::"  << endl;
