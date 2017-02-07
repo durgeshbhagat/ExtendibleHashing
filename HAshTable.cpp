@@ -7,11 +7,12 @@
 using namespace std;
 class Bucket{
 	public:
-	vector<int> *node;
+	vector<int> entry;
+	vector<int> *node= &entry;
 	int localdepth;
 	int cur_size;
 	Bucket(int bucketsize){
-		node = (node *)malloc(sizeof(node));
+		//node = (node *)malloc(sizeof(node));
 		localdepth=log2(bucketsize);
 		cur_size = -1;
 		cout << " node size : " << node->size() <<endl; 
