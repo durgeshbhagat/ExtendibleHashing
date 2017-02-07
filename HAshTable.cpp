@@ -87,7 +87,12 @@ void print(HashTable &h){
 	for(int i=0;i<directory.size();i++){
 		Bucket *b=directory[i];
 		vector<int> *node=b->node;
-		cout<<"Bucket id : " << i<<" local_depth : "<<b->localdepth<<" Bucket Contents : ";
+		cout<<"Bucket id : " << i<<" local_depth : "<<b->localdepth<<" Bucket Contents : ";		
+		if (b->cur_size ==-1) // Escape printing for Mirror Image
+		{
+			cout << endl;
+			continue;
+		}
 		for(int i=0;i<node->size();i++){
 			cout<< (*node)[i] <<"  ";
 
@@ -118,8 +123,8 @@ void emptybucket(Bucket *b){
 	
 	vector<int> *node=b->node;
 	node->erase(node->begin(),node->end());
-
 	b->node=node; 
+	b->cur_size = -1;
 }
 int mostSignificantBit(int myInt){
   int mask = 1 << 31;
@@ -141,8 +146,8 @@ void reAdjustPointers(HashTable &h,int orig_loc){
 		if( i!=orig_loc)
 		{ int  image_loc = i+ start ; 
 		  (directory[image_loc]->node) = (directory[i]->node) ;
-          cout << " original node : " << (directory[i]->node);
-          cout << " Image node : " << (directory[image_loc]->node);
+          cout << " DEBUG INFO : original node " << i << " address : " << (directory[i]->node);
+          cout << " DEBUG INFO : Image node : " << image_loc <<" address : "<< (directory[image_loc]->node);
 	    }
 		/*
 		if(s.find(i)==s.end()){
@@ -169,6 +174,7 @@ void printDirectory(vector<Bucket*> directory){
 	}
 	
 }
+// Doubling Directory and spliting bucket
 void insertSplit(HashTable &h,int value){
 	vector<Bucket*> directory=h.directory;
 	int orig_loc=hashCode(value,directory.size());
@@ -181,30 +187,34 @@ void insertSplit(HashTable &h,int value){
 	cout<<"DEBUG : Directory doubled" << endl;
 	h.globaldepth=log2(directory.size());
         // Re-distributing the keys across the splitted bucket for cur loc
-	vector<int> *node=directory[orig_loc]->node;
+	vector<int> node=*(directory[orig_loc]->node);
+	//printNode(node);
 	emptybucket(directory[orig_loc]); // Delete the all the entry from the existing Original Bucket ID 
 	//printDirectory(directory);
 	//printNode(node);
        
 	//set<int> s;
         //Redistributing  and re-inserting elements of Orginal Bucket between  Image bucket and Original bucket
-	cout << " Node size : " << node->size() << endl ;
-	for(int i=0;i<node->size();i++){
-		int loc =hashCode((*node)[i],directory.size());
+	cout << " Node size : " << node.size() << endl ;
+	for(int i=0;i<node.size();i++){
+		int loc =hashCode(node[i],directory.size());
+		cout << " Node element processed : " << node[i] << endl;
 		/*if(s.find(loc)==s.end()){
 			s.insert(loc);
 		}*/
-		insertback(directory[loc],(*node)[i]);
+		insertback(directory[loc],node[i]);
 		directory[loc]->cur_size +=1;
 	}
+	//printNode(
 	// Pushing the new element value
 	int loc=hashCode(value,directory.size());
 	insertback(directory[loc],value);
 
         // Increase local depth of Original bucket and Image Bucket ID 
+	//cout<<"DEBUG INFO : Original"<<endl;
 	directory[orig_loc]->localdepth++;
 	directory[image_loc]->localdepth++;
-	cout<<"inserted"<<endl;
+	cout<<"DEBUG INFO : inserted"<<endl;
 	/*if(s.size()>2){
 		cout<<"More than two buckets formed!!!";
 		exit(0);
@@ -222,46 +232,41 @@ void insertSplit(HashTable &h,int value){
 	//cout<<"readjusting"<<endl;
 	reAdjustPointers(h, orig_loc);
 }
-void bucketSplit(HashTable &h,int value,int loc){
-	cout<<"Location:"<<loc<<endl;
-	Bucket* b=h.directory[loc];
+// Splitting bucket
+void bucketSplit(HashTable &h,int value,int orig_loc){
+	cout<<"Location:"<<orig_loc<<endl;
+	Bucket* b=h.directory[orig_loc];
 	Bucket* nb=new Bucket(h.bucketsize);
 	vector<Bucket*> directory=h.directory;
-	vector<int> *node=directory[loc]->node;
-	set<int> s;
-	s.insert(loc);
-	for(int i=0;i<node->size();i++){
-		int loc=hashCode((*node)[i],directory.size());
-		if(s.find(loc)==s.end()){
-			s.insert(loc);
-		}
+	vector<int> node=*(directory[orig_loc]->node);
+	emptybucket(directory[orig_loc]); // Delete the all the entry from the existing Original Bucket ID 
+	// Assign Empty node to image Bucket
+	int dir_size = h.directory.size();
+	int dir_half_size = dir_size/2;
+	int image_loc;
+	if (orig_loc < dir_half_size)
+	{	image_loc = orig_loc + dir_half_size;
 	}
-	for(set<int>::iterator it=s.begin();it!=s.end();it++){
-		cout<<*it<<endl;
-		if(*it==loc){
-			emptybucket(directory[loc]);
-		}
-		else{
-			directory[*it]=nb;
-		}
+	else
+	{	image_loc = orig_loc -dir_half_size ;
 	}
-	printDirectory(directory);	
-	for(int i=0;i<node->size();i++){
-		int loc=hashCode((*node)[i],directory.size());
-		insertback(directory[loc],(*node)[i]);
+	directory[image_loc] = nb;	
+	// Reassigning and re-inserting each entry of current loc  
+	for(int i=0;i<node.size();i++){
+		int loc=hashCode(node[i],directory.size());
+		insertback(directory[loc],node[i]);
+		directory[loc]->cur_size +=1;
+	
 	}
-	int loc1=hashCode(value,directory.size());
-	insertback(directory[loc1],value);
-	if(s.size()>2){
-		cout<<"More than two buckets formed!!!";
-		exit(0);
-	}
-	else{
-		for(set<int>::iterator it=s.begin();it!=s.end();it++){
-			int loc=*it;
-			directory[loc]->localdepth++;
-		}
-	}
+	// Pushing the new element value
+	int loc=hashCode(value,directory.size());
+	insertback(directory[loc],value);
+
+        // Increase local depth of Original bucket and Image Bucket ID 
+	directory[orig_loc]->localdepth++;
+	directory[image_loc]->localdepth++;
+	cout<<"DEBUG INFO : inserted"<<endl;
+	
 	h.directory=directory;
 	
 }
@@ -281,7 +286,7 @@ void insert(int value,HashTable &h){
 		}
 		else if(localdepth<globaldepth){
 			cout<<"INFO  : Splitting bucket "<<endl;
-			//bucketSplit(h,value,loc);
+			bucketSplit(h,value,loc);
 		}
 		else{
 			cout<<" WARNING : : local depth > global depth : Exiting the PROGRAM";
@@ -316,10 +321,43 @@ int search(int value,HashTable h){
 	cout<<"INFO ::Not Found!!!!";	
 	return -1;
 }
+int search_Node(int value,vector <int> *node){
+	//int loc=hashCode(value,h.directory.size());
+	//vector<int> *node=h.directory[loc]->node;
+	for(int i=0;i<node->size();i++){
+		if((*node)[i]==value){
+			cout<<value<<"INFO : found in Node at location "<<i<<endl;
+			return i;
+		}
+	}
+	cout<<"INFO ::Not Found in the Node!!";	
+	return -1;
+}
+// Lazy deletetion
 void deleteVal(int value,HashTable &h){
 	int loc=search(value,h);
+	int loc_node = search_Node(value,h.directory[loc]->node);
 	if(loc>=0){
 		vector<int> *node=h.directory[loc]->node;
+		node->erase(node->begin() +loc_node);
+		// Updating cur pointer 
+		if (h.directory[loc]->localdepth == h.globaldepth)
+		{	h.directory[loc]->cur_size -=1;
+			return;
+		}
+		int orig_loc = loc;
+		int image_loc, dir_size, dir_half_size;
+		dir_size = h.directory.size();
+		dir_half_size = dir_size/2;
+		if(orig_loc < dir_half_size)
+			image_loc = orig_loc + dir_half_size;
+		else
+			image_loc = orig_loc - dir_half_size;
+		if(h.directory[orig_loc]->cur_size ==-1)
+			h.directory[image_loc]->cur_size -=1;
+		else
+			h.directory[orig_loc]->cur_size -=1;	 
+		/*
 		int flag=0;
 		for(int i=0;i<node->size();i++){
 			if((*node)[i]==value || flag==1){
@@ -331,7 +369,7 @@ void deleteVal(int value,HashTable &h){
 				}	
 			}
 		}
-		printNode(node);
+		printNode(node);*/
 		h.directory[loc]->node=node;
 	}
 }
