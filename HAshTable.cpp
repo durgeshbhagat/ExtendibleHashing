@@ -7,12 +7,14 @@
 using namespace std;
 class Bucket{
 	public:
-	vector<int> node;
+	vector<int> *node;
 	int localdepth;
 	int cur_size;
 	Bucket(int bucketsize){
+		node = (node *)malloc(sizeof(node));
 		localdepth=log2(bucketsize);
 		cur_size = -1;
+		cout << " node size : " << node->size() <<endl; 
 		/*for(int i=0;i<bucketsize;i++){
 			node.push_back(-1);
 		}*/
@@ -56,9 +58,12 @@ int printMenu() {
 }
 bool isFull(Bucket *b,int bucket_size)
 // Return 0 if bucket full else returns the size of bucket
-{
-	vector<int> node=b->node;
-        int size = node.size();
+{	
+	cout << " the size of Bucket is  : " << endl;
+	vector<int> *node=b->node;
+	cout << " the size of Bucket is 2  : " << endl;
+        int size = node->size();
+	cout << " the size of Bucket is 3  : " << endl;
 	cout << " the size of Bucket is  : " << size << endl;
         if (size == bucket_size)
 		return true;
@@ -79,10 +84,10 @@ void print(HashTable &h){
 	cout<<"INFO :: DIRECTORY Global Depth : "<<h.globaldepth<<endl;
 	for(int i=0;i<directory.size();i++){
 		Bucket *b=directory[i];
-		vector<int> node=b->node;
+		vector<int> *node=b->node;
 		cout<<"Bucket id : " << i<<" local_depth : "<<b->localdepth<<" Bucket Contents : ";
-		for(int i=0;i<node.size();i++){
-			cout<< node[i] <<"  ";
+		for(int i=0;i<node->size();i++){
+			cout<< (*node)[i] <<"  ";
 
 
 		}
@@ -95,7 +100,7 @@ void insertback(Bucket *b,int value){
         int node_size = node.size();
         cout << " node_size : " << node_size << endl ;
         node.push_back(value);*/
-        b->node.push_back(value);
+        b->node->push_back(value);
         /*
 	for(int i=0;i<node.size();i++){
 		if(node[i]==-1){
@@ -109,8 +114,8 @@ void insertback(Bucket *b,int value){
 }
 void emptybucket(Bucket *b){
 	
-	vector<int> node=b->node;
-	node.erase(node.begin(),node.end());
+	vector<int> *node=b->node;
+	node->erase(node->begin(),node->end());
 
 	b->node=node; 
 }
@@ -126,14 +131,17 @@ int mostSignificantBit(int myInt){
 }
 
 //void readjustPointers(HashTable &h,set<int> &s){
-void readjustPointers(HashTable &h,int orig_loc){
+void reAdjustPointers(HashTable &h,int orig_loc){
 	vector<Bucket*> directory=h.directory;
+
 	int start=directory.size()/2;
 	for(int i=0;i<start;i++){
 		if( i!=orig_loc)
 		{ int  image_loc = i+ start ; 
-		  directory[image_loc]->node = directory[i]->node ;
-	         }
+		  (directory[image_loc]->node) = (directory[i]->node) ;
+          cout << " original node : " << (directory[i]->node);
+          cout << " Image node : " << (directory[image_loc]->node);
+	    }
 		/*
 		if(s.find(i)==s.end()){
 			int bitindex=mostSignificantBit(i);
@@ -145,15 +153,15 @@ void readjustPointers(HashTable &h,int orig_loc){
 	}
 	h.directory=directory;
 }
-void printNode(vector<int> &v){
-	for(int i=0;i<v.size();i++){
-		cout<<v[i]<<" ";
+void printNode(vector<int> *v){
+	for(int i=0;i<v->size();i++){
+		cout<<(*v)[i]<<" ";
 	}
 	cout<<endl;
 }
 void printDirectory(vector<Bucket*> directory){
 	for(int i=0;i<directory.size();i++){
-		vector<int> node=directory[i]->node;
+		vector<int> *node=directory[i]->node;
 		cout<<i<<" "<<directory[i]->localdepth<<":";
 		printNode(node);
 	}
@@ -171,20 +179,20 @@ void insertSplit(HashTable &h,int value){
 	cout<<"DEBUG : Directory doubled" << endl;
 	h.globaldepth=log2(directory.size());
         // Re-distributing the keys across the splitted bucket for cur loc
-	vector<int> node=directory[orig_loc]->node;
+	vector<int> *node=directory[orig_loc]->node;
 	emptybucket(directory[orig_loc]); // Delete the all the entry from the existing Original Bucket ID 
 	//printDirectory(directory);
 	//printNode(node);
        
 	//set<int> s;
         //Redistributing  and re-inserting elements of Orginal Bucket between  Image bucket and Original bucket
-	cout << " Node size : " << node.size() << endl ;
-	for(int i=0;i<node.size();i++){
-		int loc =hashCode(node[i],directory.size());
+	cout << " Node size : " << node->size() << endl ;
+	for(int i=0;i<node->size();i++){
+		int loc =hashCode((*node)[i],directory.size());
 		/*if(s.find(loc)==s.end()){
 			s.insert(loc);
 		}*/
-		insertback(directory[loc],node[i]);
+		insertback(directory[loc],(*node)[i]);
 		directory[loc]->cur_size +=1;
 	}
 	// Pushing the new element value
@@ -210,18 +218,18 @@ void insertSplit(HashTable &h,int value){
 	h.directory=directory; // Re-assigning the Directory
 	//print(h);
 	//cout<<"readjusting"<<endl;
-	readjustPointers(h, orig_loc);
+	reAdjustPointers(h, orig_loc);
 }
 void bucketSplit(HashTable &h,int value,int loc){
 	cout<<"Location:"<<loc<<endl;
 	Bucket* b=h.directory[loc];
 	Bucket* nb=new Bucket(h.bucketsize);
 	vector<Bucket*> directory=h.directory;
-	vector<int> node=directory[loc]->node;
+	vector<int> *node=directory[loc]->node;
 	set<int> s;
 	s.insert(loc);
-	for(int i=0;i<node.size();i++){
-		int loc=hashCode(node[i],directory.size());
+	for(int i=0;i<node->size();i++){
+		int loc=hashCode((*node)[i],directory.size());
 		if(s.find(loc)==s.end()){
 			s.insert(loc);
 		}
@@ -236,9 +244,9 @@ void bucketSplit(HashTable &h,int value,int loc){
 		}
 	}
 	printDirectory(directory);	
-	for(int i=0;i<node.size();i++){
-		int loc=hashCode(node[i],directory.size());
-		insertback(directory[loc],node[i]);
+	for(int i=0;i<node->size();i++){
+		int loc=hashCode((*node)[i],directory.size());
+		insertback(directory[loc],(*node)[i]);
 	}
 	int loc1=hashCode(value,directory.size());
 	insertback(directory[loc1],value);
@@ -296,9 +304,9 @@ void insert(int value,HashTable &h){
 }
 int search(int value,HashTable h){
 	int loc=hashCode(value,h.directory.size());
-	vector<int> node=h.directory[loc]->node;
-	for(int i=0;i<node.size();i++){
-		if(node[i]==value){
+	vector<int> *node=h.directory[loc]->node;
+	for(int i=0;i<node->size();i++){
+		if((*node)[i]==value){
 			cout<<value<<"INFO : found at location "<<loc<<endl;
 			return loc;
 		}
@@ -309,15 +317,15 @@ int search(int value,HashTable h){
 void deleteVal(int value,HashTable &h){
 	int loc=search(value,h);
 	if(loc>=0){
-		vector<int> node=h.directory[loc]->node;
+		vector<int> *node=h.directory[loc]->node;
 		int flag=0;
-		for(int i=0;i<node.size();i++){
-			if(node[i]==value || flag==1){
+		for(int i=0;i<node->size();i++){
+			if((*node)[i]==value || flag==1){
 				flag=1;
-				if(i+1<node.size())
-					node[i]=node[i+1];
+				if(i+1<node->size())
+					(*node)[i]=(*node)[i+1];
 				else{
-					node[i]=-1;
+					(*node)[i]=-1;
 				}	
 			}
 		}
@@ -330,9 +338,9 @@ void deleteAll(int loc,HashTable &h){
 		cout<<"Invalid index"<<endl;
 	}
 	else{
-		vector<int> node=h.directory[loc]->node;
-		for(int i=0;i<node.size();i++){
-			node[i]=-1;
+		vector<int> *node=h.directory[loc]->node;
+		for(int i=0;i<node->size();i++){
+			(*node)[i]=-1;
 		}
 		h.directory[loc]->node=node;
 	}
