@@ -11,7 +11,8 @@ class Bucket{
 	int localdepth;
 	int cur_size;
 	Bucket(int bucketsize){
-		node = (node *)malloc(sizeof(node));
+		//node = (node *)malloc(sizeof(node));
+		node = new vector<int>(bucketsize);
 		localdepth=log2(bucketsize);
 		cur_size = -1;
 		cout << " node size : " << node->size() <<endl; 
