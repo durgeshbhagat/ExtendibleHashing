@@ -311,48 +311,53 @@ int searchNode(int value,vector <int> *node)
 	cout<<"INFO ::Not Found in the Node!!";	
 	return -1;
 }
+
+int imageLoc(int original_loc, int dir_size)
+{
+	int dir_half_size = dir_size/2, image_loc;
+	if(orig_loc < dir_half_size)
+		image_loc = orig_loc + dir_half_size;
+	else
+		image_loc = orig_loc - dir_half_size;
+	return image_loc;
+}
 // Lazy deletetion
 void deleteVal(int value,HashTable &h)
 {
-	int loc=search(value,h);
-	int loc_node = searchNode(value,h.directory[loc]->node);
-	if(loc>=0)
+	int orig_loc=search(value,h);
+	int loc_node = searchNode(value,h.directory[orig_loc]->node);
+	int image_loc = imageLoc(orig_loc, h.directory.size())
+	if(loc_node>=0)
 	{
-		vector<int> *node=h.directory[loc]->node;
+		vector<int> *node=h.directory[orig_loc]->node;
 		
 		node->erase(node->begin() +loc_node);
 		// Updating cur pointer 
-		if (h.directory[loc]->local_depth == h.global_depth)
-		{	h.directory[loc]->cur_size -=1;
-			return;
+		if (h.directory[orig_loc]->local_depth == h.global_depth)
+		{	h.directory[orig_loc]->cur_size -=1;
+			//return;
 		}
-		int orig_loc = loc;
-		int image_loc, dir_size, dir_half_size;
-		dir_size = h.directory.size();
-		dir_half_size = dir_size/2;
-		if(orig_loc < dir_half_size)
-			image_loc = orig_loc + dir_half_size;
-		else
-			image_loc = orig_loc - dir_half_size;
-		if(h.directory[orig_loc]->cur_size ==-1)
-		{
-			h.directory[image_loc]->cur_size -=1;
-			h.directory[image_loc]->local_depth -=1;
-		}		
 		else
 		{
-			h.directory[orig_loc]->cur_size -=1;
-			h.directory[orig_loc]->local_depth -=1;
+			if(h.directory[orig_loc]->cur_size ==-1)
+			{
+				h.directory[image_loc]->cur_size -=1;
+				//h.directory[image_loc]->local_depth -=1;
+			}		
+			else
+			{
+				h.directory[orig_loc]->cur_size -=1;
+				//h.directory[orig_loc]->local_depth -=1;
+			}
 		}
 		h.directory[orig_loc]->node=node;
 		// Bucket Deletion 
 		if(isEmpty(h.directory[orig_loc])) // Delete Bucket and Re-map node to mirror image
-		{	
+		{	cout <<"DEBUG INFO : Bucket ID " << " image_loc " << " completly Empty " << endl;
 			h.directory[orig_loc]->node = h.directory[image_loc]->node;
 			h.directory[orig_loc]->local_depth -=1;
 			h.directory[image_loc]->local_depth -=1;
-			h.directory[
-		
+			//h.directory[
 		} 
 		
 	}
