@@ -335,9 +335,15 @@ void deleteVal(int value,HashTable &h)
 		else
 			image_loc = orig_loc - dir_half_size;
 		if(h.directory[orig_loc]->cur_size ==-1)
+		{
 			h.directory[image_loc]->cur_size -=1;
+			h.directory[image_loc]->local_depth -=1;
+		}		
 		else
+		{
 			h.directory[orig_loc]->cur_size -=1;
+			h.directory[orig_loc]->local_depth -=1;
+		}
 		h.directory[orig_loc]->node=node;
 		// Bucket Deletion 
 		if(isEmpty(h.directory[orig_loc])) // Delete Bucket and Re-map node to mirror image
@@ -345,6 +351,7 @@ void deleteVal(int value,HashTable &h)
 			h.directory[orig_loc]->node = h.directory[image_loc]->node;
 			h.directory[orig_loc]->local_depth -=1;
 			h.directory[image_loc]->local_depth -=1;
+			h.directory[
 		
 		} 
 		
