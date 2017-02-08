@@ -376,7 +376,9 @@ int main()
 	int dir_size,bucket_size,value;
 	cout<<"Enter the intital directory size (Power of 2) : ";
 	cin>>dir_size;
-	bucket_size=dir_size;
+	cout<<"Enter the bucket size : ";
+	cin >>bucket_size;
+	//bucket_size=dir_size;
 	HashTable h(dir_size,bucket_size);
 	while(true) 
 	{
