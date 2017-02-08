@@ -74,7 +74,48 @@ bool isEmpty(Bucket *b)
 	else
 		return false;
 }
+int search(int value,HashTable h)
+{
+	int loc=hashCode(value,h.directory.size());
+	vector<int> *node=h.directory[loc]->node;
+	for(int i=0;i<node->size();i++)
+	{
+		if((*node)[i]==value)
+		{
+			cout<<"INFO :: found at location  "<<loc << " and deleted" <<endl;
+			return loc;
+		}
+	}
+	cout<<"INFO :: Not Found!!!!";	
+	return -1;
+}
+// Return the postionof Node vector if element found else return -1
+int searchNode(int value,vector <int> *node)
+{
 
+	for(int i=0;i<node->size();i++)
+	{
+		if((*node)[i]==value)
+		{
+			//cout<<value<<"INFO : found in Node at location "<<i<<endl;
+			return i;
+		}
+	}
+	cout<<"INFO ::Not Found in the Node!!";	
+	return -1;
+}
+// Rturn -1 if no image exist otherwise return index of images Bucket
+int imageLoc(int orig_loc, int dir_size,int global_depth, int local_depth )
+{
+	if( local_depth == global_depth)
+		return (-1);
+	int dir_half_size = dir_size/2, image_loc;
+	if(orig_loc < dir_half_size)
+		image_loc = orig_loc + dir_half_size;
+	else
+		image_loc = orig_loc - dir_half_size;
+	return image_loc;
+}
 void print(HashTable &h)
 {
 	vector<Bucket*> directory=h.directory;
@@ -242,6 +283,12 @@ void insert(int value,HashTable &h)
 	int bucket_size =h.bucketsize;
 	int dir_size = directory.size();
 	int loc=hashCode(value,directory.size());
+	int loc_node = searchNode(value,h.directory[loc]->node);
+	if (loc_node !=-1)
+	{
+		cout << "WARNING :: Value : " << value << " is present in bucket ID : " << loc << " at postion : " << loc_node << " . Not Added !" << endl;
+		return;
+	} 
 	//cout<<"DEBUG_INFO : Location : "<<loc<<endl;
 	if(isFull(directory[loc],bucket_size))
 	{
@@ -280,48 +327,7 @@ void insert(int value,HashTable &h)
 		}
 	}
 }
-int search(int value,HashTable h)
-{
-	int loc=hashCode(value,h.directory.size());
-	vector<int> *node=h.directory[loc]->node;
-	for(int i=0;i<node->size();i++)
-	{
-		if((*node)[i]==value)
-		{
-			cout<<"INFO :: found at location  "<<loc << " and deleted" <<endl;
-			return loc;
-		}
-	}
-	cout<<"INFO :: Not Found!!!!";	
-	return -1;
-}
-// Return the postionof Node vector if element found else return -1
-int searchNode(int value,vector <int> *node)
-{
 
-	for(int i=0;i<node->size();i++)
-	{
-		if((*node)[i]==value)
-		{
-			//cout<<value<<"INFO : found in Node at location "<<i<<endl;
-			return i;
-		}
-	}
-	cout<<"INFO ::Not Found in the Node!!";	
-	return -1;
-}
-// Rturn -1 if no image exist otherwise return index of images Bucket
-int imageLoc(int orig_loc, int dir_size,int global_depth, int local_depth )
-{
-	if( local_depth == global_depth)
-		return (-1);
-	int dir_half_size = dir_size/2, image_loc;
-	if(orig_loc < dir_half_size)
-		image_loc = orig_loc + dir_half_size;
-	else
-		image_loc = orig_loc - dir_half_size;
-	return image_loc;
-}
 // Lazy deletetion
 void deleteVal(int value,HashTable &h)
 {
