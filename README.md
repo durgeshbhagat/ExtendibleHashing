@@ -20,12 +20,17 @@ Operation :
         -> display global depth
         -> local depth of each bucket and its entries
 TO DO : 
-	1) bucket deletion : update local depth, ,mapping back to mirror 
+	1) bucket deletion : update local depth, ,mapping back to mirror /*Done*/
 	2) directory shrinking : update local depth , update global depth
 	3) Remove un-necassary comment /*Done*/
 	4) Update the cse printing : Remove delteAll,  make a default case  /* Done*/
-	5) subcategory for deltition : lazy deletion , bucket  deletion, directory shrinking
+	5) subcategory  option in main function for deletion : lazy deletion , bucket  deletion , directory shrinking
 	6) Removing unneccary print statement /*Done*/
 	7) Managing proper vaiable and function name, insserting proper comment /*Done*/
 	8) Handle one Error : for two time doubling directory : local depth is not update properly       
-	9) CHange the position of { bracket in program
+	9) Change the position of { bracket in program /*Done*/
+	10) Handle Duplicate element for insertion 
+	11) Bucket size as a paramater
+	12) Use only local depth and global depth instead of Bucket->cur_size , and make node vector pointer to node vector
+	13) Source Code Tree : list of Fucntion and list of Classes, Imporatant variables name
+	14) Remove the redundant code : make a function wheneevr neccesary 
