@@ -1,0 +1,61 @@
+ ---------------- Printing Hash Table ---------------- 
+INFO :: DIRECTORY Global Depth : 2
+------------------------------------------------
+Directory slot | Bucket Pointer
+0 |0
+1 |1
+2 |2
+3 |3
+------------------------------------------------
+------------------------------------------------
+Bucket id |  Contents |  Overflow Pages | 
+0  	|	4 	| 	No overflow page
+
+1  	|	5 	|	9 	| 	No overflow page
+
+2  	|	2 	|	6 	| 	No overflow page
+
+3  	|	11 	| 	No overflow page
+
+------------------------------------------------
+ DEBUG: dir_size4
+INFO : Normal Insertion --;  INFO : Inserted at Bucket ID : 1
+ DEBUG INFO : global depth :  2 local_depth : 2
+ DEBUG: dir_size4
+INFO : Normal Insertion --;  INFO : Inserted at Bucket ID : 1
+ DEBUG INFO : global depth :  2 local_depth : 2
+ DEBUG: dir_size4
+INFO : Bucket ID :  1 is Full 
+INFO : Splitting the Bucket and Doubling the Directory 
+INFO : Directory doubled and Bucket Splitted
+INFO : inserted at 5
+ ---------------- Printing Hash Table ---------------- 
+INFO :: DIRECTORY Global Depth : 3
+------------------------------------------------
+Directory slot | Bucket Pointer
+0 |0
+1 |1
+2 |2
+3 |3
+4 |4
+5 |5
+6 |6
+7 |7
+------------------------------------------------
+------------------------------------------------
+Bucket id |  Contents |  Overflow Pages | 
+0  	|	4 	| 	No overflow page
+
+1  	|	9 	|	17 	| 	No overflow page
+
+2  	|	2 	|	6 	| 	No overflow page
+
+3  	|	11 	| 	No overflow page
+
+4  	| 	Empty 	| No Overflow Page
+5  	|	5 	|	13 	|	21	
+6  	| 	Empty 	| No Overflow Page
+7  	| 	Empty 	| No Overflow Page
+------------------------------------------------
+/* after this dir_size is not updating to 8...*/
+/*i.e. if We insert 7 ,it is mapping to loc 3 not to 7*/ 
