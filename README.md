@@ -30,7 +30,7 @@ TO DO :
 	8) Handle one Error : for two time doubling directory : local depth is not updated properly       
 	9) Change the position of { bracket in program /*Done*/
 	10) Handle Duplicate element for insertion /*Done*/
-	11) Bucket size as a paramater
+	11) Bucket size as a paramater /*Done*/
 	12) Use only local depth and global depth instead of Bucket->cur_size , and make node vector pointer to node vector
 	13) Source Code Tree : list of Fucntion and list of Classes, Imporatant variables name
 	14) Remove the redundant code : make a function wheneevr neccesary 
