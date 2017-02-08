@@ -166,7 +166,18 @@ void print(HashTable &h)
 	}
 	cout << "------------------------------------------------" << endl;
 }
+void emptyBucket(Bucket *b)
+{
 
+	vector<int> *node=b->node;
+	vector<int> *overflownode = b->overflow_page;
+	node->erase(node->begin(),node->end());
+	//emptying overflow_page
+	overflownode->erase(overflownode->begin(),overflownode->end());
+	b->node=node;
+	b->overflow_page=overflownode; 
+	b->cur_size = -1;
+}
 void insertBack(Bucket *b,int value,int bucket_size, int overflow_option)
 {
 	if(overflow_option==0)
@@ -182,20 +193,14 @@ void insertBack(Bucket *b,int value,int bucket_size, int overflow_option)
 		else
 		{
 			b->node->push_back(value);
+			//emptyBucket(b->overflow_page);
 			return;
 		}
 	}
 	//cout << " DEBUG INFO : " << value << " inserted " << endl;
 
 }
-void emptyBucket(Bucket *b)
-{
 
-	vector<int> *node=b->node;
-	node->erase(node->begin(),node->end());
-	b->node=node; 
-	b->cur_size = -1;
-}
 int mostSignificantBit(int myInt)
 {
 	int mask = 1 << 31;
@@ -257,8 +262,9 @@ void insertSplit(HashTable &h,int value)
 	h.global_depth=log2(directory.size());
 	// Re-distributing the keys across the splitted bucket for cur loc
 	vector<int> node=*(directory[orig_loc]->node);
+	vector<int> overflow_node = *(directory[orig_loc]->overflow_page);
 	emptyBucket(directory[orig_loc]); // Delete the all the entry from the existing Original Bucket ID 
-
+	//emptyBucket(directory[orig_loc]->overflow_page);
 	//Redistributing  and re-inserting elements of Orginal Bucket between  Image bucket and Original bucket
 	for(int i=0;i<node.size();i++)
 	{
@@ -267,7 +273,16 @@ void insertSplit(HashTable &h,int value)
 		insertBack(directory[loc],node[i],h.bucket_size, h.overflow_flag);
 		directory[loc]->cur_size +=1;
 	}
-
+	for(int i=0;i<overflow_node.size();i++)
+	{
+		int loc =hashCode(overflow_node[i],directory.size());
+		//cout << " Node element processed : " << node[i] << endl;
+		insertBack(directory[loc],overflow_node[i],h.bucket_size, h.overflow_flag);
+		//directory[loc]->cur_size +=1;
+	}
+	//Bucket *b;
+	//vector<int> *overflownode=b->overflow_page;
+	//overflow_node->erase(overflow_node->begin(),overflow_node->end());
 	// Pushing the new element value
 	int loc=hashCode(value,directory.size());
 	insertBack(directory[loc],value,h.bucket_size, h.overflow_flag);
@@ -291,6 +306,7 @@ void bucketSplit(HashTable &h,int value,int orig_loc)
 	Bucket* nb=new Bucket(h.bucket_size,h.directory[orig_loc]->local_depth);
 	vector<Bucket*> directory=h.directory;
 	vector<int> node=*(directory[orig_loc]->node);
+	vector<int> overflow_node = *(directory[orig_loc]->overflow_page);
 	emptyBucket(directory[orig_loc]); // Delete the all the entry from the existing Original Bucket ID 
 	// Assign Empty node to image Bucket
 	int dir_size = h.directory.size();
@@ -310,6 +326,13 @@ void bucketSplit(HashTable &h,int value,int orig_loc)
 		insertBack(directory[loc],node[i],h.bucket_size, h.overflow_flag);
 		directory[loc]->cur_size +=1;
 
+	}
+	for(int i=0;i<overflow_node.size();i++)
+	{
+		int loc =hashCode(overflow_node[i],directory.size());
+		//cout << " Node element processed : " << node[i] << endl;
+		insertBack(directory[loc],overflow_node[i],h.bucket_size, h.overflow_flag);
+		//directory[loc]->cur_size +=1;
 	}
 	// Pushing the new element value
 	int loc=hashCode(value,directory.size());
