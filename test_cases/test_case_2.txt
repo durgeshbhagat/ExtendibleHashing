@@ -1,0 +1,137 @@
+/Deletion without expanding the diretory, issue in local depth */
+
+Enter the intital directory size (Power of 2) : 4
+
+-----------------------------------------
+Extendible Hashing Implementation.
+-----------------------------------------
+		 1. Insert a Record
+		 2. Search a Record
+		 3. Delete a Record
+		 4. Show All Records
+		 5. Exit
+
+Choice : 1
+Enter value to be added : 1
+INFO : Normal Insertion --
+INFO : Inserted at 1
+
+-----------------------------------------
+Extendible Hashing Implementation.
+-----------------------------------------
+		 1. Insert a Record
+		 2. Search a Record
+		 3. Delete a Record
+		 4. Show All Records
+		 5. Exit
+
+Choice : 4
+ ---------------- Printing Hash Table ---------------- 
+INFO :: DIRECTORY Global Depth : 2
+Bucket id : 0 local_depth : 2 Bucket Contents : 
+Bucket id : 1 local_depth : 2 Bucket Contents : 1  
+Bucket id : 2 local_depth : 2 Bucket Contents : 
+Bucket id : 3 local_depth : 2 Bucket Contents : 
+
+-----------------------------------------
+Extendible Hashing Implementation.
+-----------------------------------------
+		 1. Insert a Record
+		 2. Search a Record
+		 3. Delete a Record
+		 4. Show All Records
+		 5. Exit
+
+Choice : 1
+Enter value to be added : 12
+INFO : Normal Insertion --
+INFO : Inserted at 0
+
+-----------------------------------------
+Extendible Hashing Implementation.
+-----------------------------------------
+		 1. Insert a Record
+		 2. Search a Record
+		 3. Delete a Record
+		 4. Show All Records
+		 5. Exit
+
+Choice : 1
+Enter value to be added : 20
+INFO : Normal Insertion --
+INFO : Inserted at 0
+
+-----------------------------------------
+Extendible Hashing Implementation.
+-----------------------------------------
+		 1. Insert a Record
+		 2. Search a Record
+		 3. Delete a Record
+		 4. Show All Records
+		 5. Exit
+
+Choice : 1
+Enter value to be added : 8
+INFO : Normal Insertion --
+INFO : Inserted at 0
+
+-----------------------------------------
+Extendible Hashing Implementation.
+-----------------------------------------
+		 1. Insert a Record
+		 2. Search a Record
+		 3. Delete a Record
+		 4. Show All Records
+		 5. Exit
+
+Choice : 4
+ ---------------- Printing Hash Table ---------------- 
+INFO :: DIRECTORY Global Depth : 2
+Bucket id : 0 local_depth : 2 Bucket Contents : 12  20  8  
+Bucket id : 1 local_depth : 2 Bucket Contents : 1  
+Bucket id : 2 local_depth : 2 Bucket Contents : 
+Bucket id : 3 local_depth : 2 Bucket Contents : 
+
+-----------------------------------------
+Extendible Hashing Implementation.
+-----------------------------------------
+		 1. Insert a Record
+		 2. Search a Record
+		 3. Delete a Record
+		 4. Show All Records
+		 5. Exit
+
+Choice : 3
+Enter value to be deleted : 1
+INFO :: found at location  1 and deleted
+DEBUG INFO : Bucket ID  image_loc  completly Empty 
+
+-----------------------------------------
+Extendible Hashing Implementation.
+-----------------------------------------
+		 1. Insert a Record
+		 2. Search a Record
+		 3. Delete a Record
+		 4. Show All Records
+		 5. Exit
+
+Choice : 4
+ ---------------- Printing Hash Table ---------------- 
+INFO :: DIRECTORY Global Depth : 2
+Bucket id : 0 local_depth : 2 Bucket Contents : 12  20  8  
+Bucket id : 1 local_depth : 1 Bucket Contents : 
+Bucket id : 2 local_depth : 2 Bucket Contents : 
+Bucket id : 3 local_depth : 1 Bucket Contents : 
+
+-----------------------------------------
+Extendible Hashing Implementation.
+-----------------------------------------
+		 1. Insert a Record
+		 2. Search a Record
+		 3. Delete a Record
+		 4. Show All Records
+		 5. Exit
+
+Choice : 1
+Enter value to be added : 
+

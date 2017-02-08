@@ -1,0 +1,162 @@
+/* Sample I/P-O/P 1*/ 
+Enter the intital directory size (Power of 2) : 4
+
+Choice : 1
+Enter value to be added : 4
+INFO : Normal Insertion --
+INFO : Inserted at 0
+
+Choice : 1
+Enter value to be added : 12
+INFO : Normal Insertion --
+INFO : Inserted at 0
+
+Choice : 1
+Enter value to be added : 20
+INFO : Normal Insertion --
+INFO : Inserted at 0
+
+
+Choice : 1
+Enter value to be added : 8
+INFO : Normal Insertion --
+INFO : Inserted at 0
+
+Choice : 4
+ ---------------- Printing Hash Table ---------------- 
+INFO :: DIRECTORY Global Depth : 2
+Bucket id : 0 local_depth : 2 Bucket Contents : 4  12  20  8  
+Bucket id : 1 local_depth : 2 Bucket Contents : 
+Bucket id : 2 local_depth : 2 Bucket Contents : 
+Bucket id : 3 local_depth : 2 Bucket Contents : 
+
+Choice : 1
+Enter value to be added : 2
+INFO : Normal Insertion --
+INFO : Inserted at 2
+
+Choice : 1
+Enter value to be added : 3
+INFO : Normal Insertion --
+INFO : Inserted at 3
+
+
+Choice : 1
+Enter value to be added : 5
+INFO : Normal Insertion --
+INFO : Inserted at 1
+
+Choice : 4
+ ---------------- Printing Hash Table ---------------- 
+INFO :: DIRECTORY Global Depth : 2
+Bucket id : 0 local_depth : 2 Bucket Contents : 4  12  20  8  
+Bucket id : 1 local_depth : 2 Bucket Contents : 5  
+Bucket id : 2 local_depth : 2 Bucket Contents : 2  
+Bucket id : 3 local_depth : 2 Bucket Contents : 3  
+
+Choice : 1
+Enter value to be added : 32
+INFO : Bucket ID :  0is Full 
+INFO : Splitting the Bucket and Doubling the Directory 
+INFO : Directory doubled and Bucket Splitted
+INFO : inserted at 0
+
+Choice : 4
+ ---------------- Printing Hash Table ---------------- 
+INFO :: DIRECTORY Global Depth : 3
+Bucket id : 0 local_depth : 3 Bucket Contents : 8  32  
+Bucket id : 1 local_depth : 2 Bucket Contents : 5  
+Bucket id : 2 local_depth : 2 Bucket Contents : 2  
+Bucket id : 3 local_depth : 2 Bucket Contents : 3  
+Bucket id : 4 local_depth : 3 Bucket Contents : 4  12  20  
+Bucket id : 5 local_depth : 2 Bucket Contents : 
+Bucket id : 6 local_depth : 2 Bucket Contents : 
+Bucket id : 7 local_depth : 2 Bucket Contents : 
+
+Choice : 3
+Enter value to be deleted : 8
+INFO :: found at location  0 and deleted
+
+
+Choice : 4
+ ---------------- Printing Hash Table ---------------- 
+INFO :: DIRECTORY Global Depth : 3
+Bucket id : 0 local_depth : 3 Bucket Contents : 32  
+Bucket id : 1 local_depth : 2 Bucket Contents : 5  
+Bucket id : 2 local_depth : 2 Bucket Contents : 2  
+Bucket id : 3 local_depth : 2 Bucket Contents : 3  
+Bucket id : 4 local_depth : 3 Bucket Contents : 4  12  20  
+Bucket id : 5 local_depth : 2 Bucket Contents : 
+Bucket id : 6 local_depth : 2 Bucket Contents : 
+Bucket id : 7 local_depth : 2 Bucket Contents : 
+
+Choice : 3
+Enter value to be deleted : 32
+INFO :: found at location  0 and deleted
+
+Choice : 4
+ ---------------- Printing Hash Table ---------------- 
+INFO :: DIRECTORY Global Depth : 3
+Bucket id : 0 local_depth : 3 Bucket Contents : 	/* -----here local_depth is not updated----*/
+Bucket id : 1 local_depth : 2 Bucket Contents : 5  
+Bucket id : 2 local_depth : 2 Bucket Contents : 2  
+Bucket id : 3 local_depth : 2 Bucket Contents : 3  
+Bucket id : 4 local_depth : 3 Bucket Contents : 4  12  20  
+Bucket id : 5 local_depth : 2 Bucket Contents : 
+Bucket id : 6 local_depth : 2 Bucket Contents : 
+Bucket id : 7 local_depth : 2 Bucket Contents : 
+
+Choice : 1
+Enter value to be added : 32
+INFO : Normal Insertion --
+INFO : Inserted at 0
+
+Choice : 1
+Enter value to be added : 4
+INFO : Normal Insertion --
+INFO : Inserted at 4
+
+
+Choice : 4
+ ---------------- Printing Hash Table ---------------- 
+INFO :: DIRECTORY Global Depth : 3
+Bucket id : 0 local_depth : 3 Bucket Contents : 32  
+Bucket id : 1 local_depth : 2 Bucket Contents : 5  
+Bucket id : 2 local_depth : 2 Bucket Contents : 2  
+Bucket id : 3 local_depth : 2 Bucket Contents : 3  
+Bucket id : 4 local_depth : 3 Bucket Contents : 4  12  20  4  
+Bucket id : 5 local_depth : 2 Bucket Contents : 
+Bucket id : 6 local_depth : 2 Bucket Contents : 
+Bucket id : 7 local_depth : 2 Bucket Contents : 
+
+-----------------------------------------
+Extendible Hashing Implementation.
+-----------------------------------------
+		 1. Insert a Record
+		 2. Search a Record
+		 3. Delete a Record
+		 4. Show All Records
+		 5. Exit
+
+Choice : 1
+Enter value to be added : 13
+INFO : Normal Insertion --
+INFO : Inserted at 5
+
+Choice : 4
+ ---------------- Printing Hash Table ---------------- 
+INFO :: DIRECTORY Global Depth : 3
+Bucket id : 0 local_depth : 3 Bucket Contents : 32  
+Bucket id : 1 local_depth : 2 Bucket Contents : 5  13  
+Bucket id : 2 local_depth : 2 Bucket Contents : 2  
+Bucket id : 3 local_depth : 2 Bucket Contents : 3  
+Bucket id : 4 local_depth : 3 Bucket Contents : 4  12  20  4  
+Bucket id : 5 local_depth : 2 Bucket Contents : 
+Bucket id : 6 local_depth : 2 Bucket Contents : 
+Bucket id : 7 local_depth : 2 Bucket Contents : 
+
+
+Choice : 
+
+
+/* Sample I/P-O/P 2*/ 
