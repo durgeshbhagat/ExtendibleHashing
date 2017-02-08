@@ -178,28 +178,7 @@ void emptyBucket(Bucket *b)
 	b->overflow_page=overflownode; 
 	b->cur_size = -1;
 }
-void insertBack(Bucket *b,int value,int bucket_size, int overflow_option)
-{
-	if(overflow_option==0)
-	{	b->node->push_back(value);
-		return;
-	}
-	else
-	{
-		if (b->node->size()==bucket_size)
-		{	b->overflow_page->push_back(value);
-			return;
-		}
-		else
-		{
-			b->node->push_back(value);
-			//emptyBucket(b->overflow_page);
-			return;
-		}
-	}
-	//cout << " DEBUG INFO : " << value << " inserted " << endl;
 
-}
 
 int mostSignificantBit(int myInt)
 {
@@ -223,6 +202,7 @@ void reAdjustPointers(HashTable &h,int orig_loc)
 		if( i!=orig_loc)
 		{ int  image_loc = i+ start ; 
 			directory[image_loc]->node = directory[i]->node;
+			directory[image_loc]->overflow_page = directory[i]->overflow_page;
 			//cout << " DEBUG INFO : original node " << i << " address : " << (directory[i]->node);
 			//cout << " DEBUG INFO : Image node : " << image_loc <<" address : "<< (directory[image_loc]->node);
 		}
@@ -244,6 +224,29 @@ void printDirectory(vector<Bucket*> directory)
 		cout<<i<<" "<<directory[i]->local_depth<<":";
 		printNode(node);
 	}
+
+}
+
+void insertBack(Bucket *b,int value,int bucket_size, int overflow_option)
+{
+	if(overflow_option==0)
+	{	b->node->push_back(value);
+		return;
+	}
+	else
+	{
+		if (b->node->size()==bucket_size)
+		{	b->overflow_page->push_back(value);
+			return;
+		}
+		else
+		{
+			b->node->push_back(value);
+			//emptyBucket(b->overflow_page);
+			return;
+		}
+	}
+	//cout << " DEBUG INFO : " << value << " inserted " << endl;
 
 }
 // Doubling Directory and spliting bucket
@@ -351,6 +354,7 @@ void insert(int value,HashTable &h)
 	vector<Bucket*> directory=h.directory;
 	int bucket_size =h.bucket_size;
 	int dir_size = directory.size();
+	cout << " DEBUG: dir_size" << dir_size <<endl;
 	int loc=hashCode(value,directory.size());
 	int loc_node = searchNode(value,h.directory[loc]->node);
 	/*if (loc_node !=-1)
