@@ -101,7 +101,7 @@ int searchNode(int value,vector <int> *node)
 			return i;
 		}
 	}
-	cout<<"INFO ::Not Found in the Node!!";	
+	//cout<<"INFO ::Not Found in the Node!!";	
 	return -1;
 }
 // Rturn -1 if no image exist otherwise return index of images Bucket
@@ -360,7 +360,8 @@ void deleteVal(int value,HashTable &h)
 		h.directory[orig_loc]->node=node;
 		// Bucket Deletion 
 		if(isEmpty(h.directory[orig_loc])) // Delete Bucket and Re-map node to mirror image
-		{	cout <<"DEBUG INFO : Bucket ID " << " image_loc " << " completly Empty " << endl;		h.directory[orig_loc]->local_depth -=1;
+		{	cout <<"DEBUG INFO : Bucket ID " << image_loc << " completely Empty " << endl;	
+			h.directory[orig_loc]->local_depth -=1;
 			image_loc = imageLoc(orig_loc, h.directory.size(),h.global_depth,h.directory[orig_loc]->local_depth);
 			h.directory[orig_loc]->node = h.directory[image_loc]->node;
 			h.directory[image_loc]->local_depth -=1;
