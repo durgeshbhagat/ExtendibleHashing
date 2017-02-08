@@ -10,11 +10,11 @@ class Bucket{
 	public:
 		//vector<int> entry;
 		vector<int> *node;
-		int localdepth;
+		int local_depth;
 		int cur_size;
 		Bucket(int bucketsize){
 			node = new vector<int>(0);
-			localdepth = log2(bucketsize);
+			local_depth = log2(bucketsize);
 			cur_size = -1;
 			cout << " node size : " << node->size() <<endl; 
 
@@ -28,10 +28,10 @@ class HashTable{
 				Bucket* b = new Bucket(bucket_size);
 				directory.push_back(b);	
 			}
-			globaldepth = log2(dir_size);
+			global_depth = log2(dir_size);
 			bucketsize = bucket_size;
 		}
-		int globaldepth;
+		int global_depth;
 		int bucketsize;
 };
 int hashCode(int number, int dir_size) //returns hashKey of a number
@@ -55,6 +55,7 @@ int printMenu() {
 	cin >> choice;
 	return choice;
 }
+
 bool isFull(Bucket *b,int bucket_size)
 // Return true if bucket full else returns false
 {
@@ -64,15 +65,25 @@ bool isFull(Bucket *b,int bucket_size)
 		return false;
 
 }
+
+bool isEmpty(Bucket *b)
+//Returns true if bucket is empty else returns false
+{
+	if(b->node->size() ==0)
+		return true;
+	else
+		return false;
+}
+
 void print(HashTable &h)
 {
 	vector<Bucket*> directory=h.directory;
 	cout << " ---------------- Printing Hash Table ---------------- " <<endl;
-	cout<<"INFO :: DIRECTORY Global Depth : "<<h.globaldepth<<endl;
+	cout<<"INFO :: DIRECTORY Global Depth : "<<h.global_depth<<endl;
 	for(int i=0;i<directory.size();i++){
 		Bucket *b=directory[i];
 		vector<int> *node=b->node;
-		cout<<"Bucket id : " << i<<" local_depth : "<<b->localdepth<<" Bucket Contents : ";		
+		cout<<"Bucket id : " << i<<" local_depth : "<<b->local_depth<<" Bucket Contents : ";		
 		if (b->cur_size ==-1) // Escape printing for Mirror Image
 		{
 			cout << endl;
@@ -86,8 +97,8 @@ void print(HashTable &h)
 
 void insertBack(Bucket *b,int value)
 {
-
 	b->node->push_back(value);
+	cout << " DEBUG INFO : " << value << " inserted " << endl;
 
 }
 void emptyBucket(Bucket *b)
@@ -138,7 +149,7 @@ void printDirectory(vector<Bucket*> directory)
 	for(int i=0;i<directory.size();i++)
 	{
 		vector<int> *node=directory[i]->node;
-		cout<<i<<" "<<directory[i]->localdepth<<":";
+		cout<<i<<" "<<directory[i]->local_depth<<":";
 		printNode(node);
 	}
 
@@ -156,7 +167,7 @@ void insertSplit(HashTable &h,int value)
 		directory.push_back(b);	
 	}
 	cout<<"DEBUG : Directory doubled" << endl;
-	h.globaldepth=log2(directory.size());
+	h.global_depth=log2(directory.size());
 	// Re-distributing the keys across the splitted bucket for cur loc
 	vector<int> node=*(directory[orig_loc]->node);
 	emptyBucket(directory[orig_loc]); // Delete the all the entry from the existing Original Bucket ID 
@@ -174,11 +185,11 @@ void insertSplit(HashTable &h,int value)
 	// Pushing the new element value
 	int loc=hashCode(value,directory.size());
 	insertBack(directory[loc],value);
-
+	directory[loc]->cur_size +=1;
 	// Increase local depth of Original bucket and Image Bucket ID 
 
-	directory[orig_loc]->localdepth++;
-	directory[image_loc]->localdepth++;
+	directory[orig_loc]->local_depth++;
+	directory[image_loc]->local_depth++;
 	cout<<"DEBUG INFO : inserted"<<endl;
 
 	h.directory=directory; // Re-assigning the Directory
@@ -217,10 +228,10 @@ void bucketSplit(HashTable &h,int value,int orig_loc)
 	// Pushing the new element value
 	int loc=hashCode(value,directory.size());
 	insertBack(directory[loc],value);
-
+	directory[loc]->cur_size +=1;
 	// Increase local depth of Original bucket and Image Bucket ID 
-	directory[orig_loc]->localdepth++;
-	directory[image_loc]->localdepth++;
+	directory[orig_loc]->local_depth++;
+	directory[image_loc]->local_depth++;
 	cout<<"DEBUG INFO : inserted"<<endl;
 
 	h.directory=directory;
@@ -236,13 +247,13 @@ void insert(int value,HashTable &h)
 	if(isFull(directory[loc],bucket_size))
 	{
 		cout<<"INFO : Bucket ID :  " << loc << " Full "<<endl;
-		int localdepth=directory[loc]->localdepth,globaldepth=h.globaldepth;
-		if(localdepth==globaldepth) //Splitting bucket & Double Directory
+		int local_depth=directory[loc]->local_depth,global_depth=h.global_depth;
+		if(local_depth==global_depth) //Splitting bucket & Double Directory
 		{
 			cout<<"INFO : Split the Bucket and Double the Directory "<<endl;
 			insertSplit(h,value);
 		}
-		else if(localdepth<globaldepth)
+		else if(local_depth<global_depth)
 		{
 			cout<<"INFO  : Splitting bucket "<<endl;
 			bucketSplit(h,value,loc);
@@ -259,7 +270,7 @@ void insert(int value,HashTable &h)
 		insertBack(directory[loc],value);
 		cout << " INFO : Innsertion Done -- " << endl ;
 		int dir_half_size = dir_size /2;
-		if(directory[loc]->localdepth == h.globaldepth || loc < dir_half_size )
+		if(directory[loc]->local_depth == h.global_depth || loc < dir_half_size )
 			directory[loc]->cur_size +=1;
 		else
 		{	int image_loc;
@@ -278,13 +289,14 @@ int search(int value,HashTable h)
 	{
 		if((*node)[i]==value)
 		{
-			cout<<value<<"INFO : found at location "<<loc<<endl;
+			cout<<value<<"INFO :: found at location : "<<loc<<endl;
 			return loc;
 		}
 	}
-	cout<<"INFO ::Not Found!!!!";	
+	cout<<"INFO :: Not Found!!!!";	
 	return -1;
 }
+// Return the postionof Node vector if element found else return -1
 int searchNode(int value,vector <int> *node)
 {
 
@@ -307,9 +319,10 @@ void deleteVal(int value,HashTable &h)
 	if(loc>=0)
 	{
 		vector<int> *node=h.directory[loc]->node;
+		
 		node->erase(node->begin() +loc_node);
 		// Updating cur pointer 
-		if (h.directory[loc]->localdepth == h.globaldepth)
+		if (h.directory[loc]->local_depth == h.global_depth)
 		{	h.directory[loc]->cur_size -=1;
 			return;
 		}
@@ -324,9 +337,17 @@ void deleteVal(int value,HashTable &h)
 		if(h.directory[orig_loc]->cur_size ==-1)
 			h.directory[image_loc]->cur_size -=1;
 		else
-			h.directory[orig_loc]->cur_size -=1;	 
-
-		h.directory[loc]->node=node;
+			h.directory[orig_loc]->cur_size -=1;
+		h.directory[orig_loc]->node=node;
+		// Bucket Deletion 
+		if(isEmpty(h.directory[orig_loc])) // Delete Bucket and Re-map node to mirror image
+		{	
+			h.directory[orig_loc]->node = h.directory[image_loc]->node;
+			h.directory[orig_loc]->local_depth -=1;
+			h.directory[image_loc]->local_depth -=1;
+		
+		} 
+		
 	}
 }
 
@@ -354,14 +375,14 @@ int main()
 
 			case 2:   // Search a record
 				{
-					cout << "Enter value to be search ";
+					cout << "Enter value to be search :  ";
 					cin >> value;
 					search(value,h);
 					break;
 				}
 			case 3: // delete data
 				{
-					cout << "Enter value to be deleted " << endl;
+					cout << "Enter value to be deleted : " ;
 					cin>>value;
 					deleteVal(value,h);
 					break;
