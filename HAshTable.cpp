@@ -101,7 +101,7 @@ int searchNode(int value,vector <int> *node)
 			return i;
 		}
 	}
-	cout<<"INFO ::Not Found in the Node!!";	
+	//cout<<"INFO ::Not Found in the Node!!";	
 	return -1;
 }
 // Rturn -1 if no image exist otherwise return index of images Bucket
@@ -312,9 +312,9 @@ void insert(int value,HashTable &h)
 	}
 	else
 	{
-		cout<<"INFO : Normal Insertion --"<<endl;
+		cout<<"INFO : Normal Insertion --;  ";
 		insertBack(directory[loc],value);
-		cout << "INFO : Inserted at " << loc << endl ;
+		cout << "INFO : Inserted at Bucket ID : " << loc << endl ;
 		int dir_half_size = dir_size /2;
 		if(directory[loc]->local_depth == h.global_depth || loc < dir_half_size )
 			directory[loc]->cur_size +=1;
