@@ -1,19 +1,25 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
-#include<cstdlib>
-#include<cstdio>
-#include<set>
+#include <cstdlib>
+#include <cstdio>
+#include <set>
+#include <fstream>
+#include <string>
+#include <sstream>
+
 
 using namespace std;
 class Bucket{
 	public:
 		//vector<int> entry;
 		vector<int> *node;
+		vector<int> *overflow_page;
 		int local_depth;
 		int cur_size;
 		Bucket(int bucketsize,int localdepth){
 			node = new vector<int>(0);
+			overflow_page = new vector<int>(0);
 			local_depth = localdepth;
 			cur_size = -1;
 			//cout << " node size : " << node->size() <<endl; 
@@ -24,8 +30,9 @@ class HashTable{
 	public:
 		int global_depth;
 		int bucket_size;
+		int overflow_flag;
 		vector<Bucket*> directory;
-		HashTable(int dir_size, int bucketsize)
+		HashTable(int dir_size, int bucketsize, int overflowflag)
 		{
 			global_depth = log2(dir_size);
 			bucket_size = bucketsize;
@@ -33,7 +40,8 @@ class HashTable{
 				Bucket* b = new Bucket(bucketsize, global_depth);
 				directory.push_back(b);	
 			}
-			
+			overflow_flag = overflowflag;
+
 		}
 
 };
@@ -42,25 +50,10 @@ int hashCode(int number, int dir_size) //returns hashKey of a number
 	int hashKey = number % dir_size;
 	return hashKey;
 }
-int printMenu() {
-	//system("clear");
-	cout << "\n-----------------------------------------" << endl;
-	cout << "Extendible Hashing Implementation." << endl;
-	cout << "-----------------------------------------" << endl;
-	cout << "\t\t 1. Insert a Record" << endl;
-	cout << "\t\t 2. Search a Record" << endl;
-	cout << "\t\t 3. Delete a Record" << endl;
-	cout << "\t\t 4. Show All Records"<< endl;
-	cout << "\t\t 5. Exit" << endl;
 
-	int choice;
-	cout << "\nChoice : ";
-	cin >> choice;
-	return choice;
-}
 
 bool isFull(Bucket *b,int bucket_size)
-// Return true if bucket full else returns false
+	// Return true if bucket full else returns false
 {
 	if (b->node->size() == bucket_size)
 		return true;
@@ -70,7 +63,7 @@ bool isFull(Bucket *b,int bucket_size)
 }
 
 bool isEmpty(Bucket *b)
-//Returns true if bucket is empty else returns false
+	//Returns true if bucket is empty else returns false
 {
 	if(b->node->size() ==0)
 		return true;
@@ -107,7 +100,7 @@ int searchNode(int value,vector <int> *node)
 	//cout<<"INFO ::Not Found in the Node!!";	
 	return -1;
 }
-// Rturn -1 if no image exist otherwise return index of images Bucket
+// Return -1 if no image exist otherwise return index of images Bucket
 int imageLoc(int orig_loc, int dir_size,int global_depth, int local_depth )
 {
 	if( local_depth == global_depth)
@@ -124,19 +117,29 @@ void print(HashTable &h)
 	vector<Bucket*> directory=h.directory;
 	cout << " ---------------- Printing Hash Table ---------------- " <<endl;
 	cout<<"INFO :: DIRECTORY Global Depth : "<<h.global_depth<<endl;
+	cout << "------------------------------------------------" << endl;
+	cout << "Directory slot | Bucket Pointer" << endl;	
+	for(int i=0;i<directory.size();i++)
+	{
+		cout << i << " |" << i << endl;
+	}
+	cout << "------------------------------------------------" << endl;
+	cout << "------------------------------------------------" << endl;
+	cout<<"Bucket id | " <<" Contents | "<<" Overflow Pages | " << endl;
 	for(int i=0;i<directory.size();i++){
 		Bucket *b=directory[i];
 		vector<int> *node=b->node;
-		cout<<"Bucket id : " << i<<" local_depth : "<<b->local_depth<<" Bucket Contents : ";		
+		//cout<<"Bucket id : " << i<<" local_depth : "<<b->local_depth<<" Bucket Contents : ";		
 		if (b->cur_size ==-1) // Escape printing for Mirror Image
 		{
-			cout << endl;
+			cout << i << " | Empty |" << " No Overflow Pages" << endl;
 			continue;
 		}
 		for(int i=0;i<node->size();i++)
-			cout<< (*node)[i] <<"  ";
+			cout << i << " | " << (*node)[i] <<"| No overflow pages ";
 		cout<<endl;
 	}
+	cout << "------------------------------------------------" << endl;
 }
 
 void insertBack(Bucket *b,int value)
@@ -299,12 +302,12 @@ void insert(int value,HashTable &h)
 		int local_depth=directory[loc]->local_depth,global_depth=h.global_depth;
 		if(local_depth==global_depth) //Splitting bucket & Double Directory
 		{
-			cout<<"INFO : Splitting the Bucket and Doubling the Directory "<<endl;
+			cout << "INFO : Splitting the Bucket and Doubling the Directory "<<endl;
 			insertSplit(h,value);
 		}
 		else if(local_depth<global_depth)
 		{
-			cout<<"INFO  : Splitting bucket "<<endl;
+			cout << "INFO  : Splitting bucket "<<endl;
 			bucketSplit(h,value,loc);
 		}
 		else
@@ -341,7 +344,7 @@ void deleteVal(int value,HashTable &h)
 	if(loc_node>=0)
 	{
 		vector<int> *node=h.directory[orig_loc]->node;
-		
+
 		node->erase(node->begin() +loc_node);
 		// Updating cur pointer 
 		if (h.directory[orig_loc]->local_depth == h.global_depth || image_loc ==-1)
@@ -371,80 +374,91 @@ void deleteVal(int value,HashTable &h)
 			h.directory[image_loc]->local_depth -=1;
 			//h.directory[
 		} 
-		
+
 	}
 }
 
 int main ( int argc, char *argv[] )
 {
-    int i;
-    ifstream fin;
-    if (argc<5)
-    {
-        cout <<" USAGE : arguements less than 4" << endl;
-        exit(0);
-     } 
-     else
-     {
-        for (i=0;i<argc; i++)
-        {
-            cout << " Arg " << i << " " << argv[i] << "\t";
-        }
-        cout << endl;
-        //exit(0);
-     }
-     
+	int i;
+	ifstream fin;
+	if (argc<5)
+	{
+		cout <<" USAGE : arguements less than 4" << endl;
+		exit(0);
+	} 
+	else
+	{
+		for (i=0;i<argc; i++)
+		{
+			cout << " Arg " << i << " " << argv[i] << "\t";
+		}
+		cout << endl;
+		//exit(0);
+	}
+
 	// your code goes here
-	int dir_size,bucket_size,value,  overflow_option;
+	int dir_size,bucket_size,value,  overflow_option,count=0;
 	dir_size = pow(2,atoi(argv[1]));
 	bucket_size = atoi(argv[2]);
 	overflow_option = atoi(argv[3]);
-	cout << " Dir size : " << dir_size << endl;
-	cout << " Dir size : " << bucket_size << endl;
+	//cout << " Dir size : " << dir_size << endl;
+	//cout << " Dir size : " << bucket_size << endl;
 	cout << " Over flow option : " << overflow_option << endl;
-	fin = open(argv[4],"r");
-    
-	exit(0);
-	HashTable h(dir_size,bucket_size);
-	cout << " Intial global_depth : " << h.global_depth << endl;
-	cout << " Intial bucket size : " << h.bucket_size << endl;
-	while(true) 
+	fin.open(argv[4]);
+	string line,line1, command;
+	HashTable h(dir_size,bucket_size, overflow_option);
+	//cout << " Intial global_depth : " << h.global_depth << endl;
+	//cout << " Intial bucket size : " << h.bucket_size << endl;
+	while(getline(fin, line))
 	{
-		int choice = printMenu();
-		char ch = getchar();  // eat newline
-		switch(choice)
-		{
-			case 1:   // Insert a record
-				{
-					cout << "Enter value to be added : ";
-					cin >> value;
-					insert(value,h);
-					break;
-				}
-
-			case 2:   // Search a record
-				{
-					cout << "Enter value to be search :  ";
-					cin >> value;
-					search(value,h);
-					break;
-				}
-			case 3: // delete data
-				{
-					cout << "Enter value to be deleted : " ;
-					cin>>value;
-					deleteVal(value,h);
-					break;
-				}
-
-			case 4:   // show All Records
-				{
-					print(h);
-					break;
-				}
-			case 5:
-				exit(0);
+		//cout <<" line : " << line << endl; 
+		stringstream ss(line);
+		//cout << "printing File : " <<endl;
+		count=0;
+		while(getline(ss, line1, ' '))
+		{	
+			count++;
+			if (count==1)
+				command = line1;
+			else if(count==2)
+			{
+				value = stoi(line1) ;
+				//cout << " value ::"<< value<<";"<<endl;;
+			}
+			else
+				break;
 		}
+		//cout << "Command : "  << command << ",value :  " << value << endl;
+		//cout << endl;
+		ss.clear();
+
+		if(!command.compare("insert"))  // Insert a record
+		{
+			insert(value,h);
+
+		}
+
+		if(!command.compare("search"))   // Search a record
+		{
+
+			search(value,h);
+
+		}
+		if(!command.compare("delete"))  // delete data
+		{
+
+			deleteVal(value,h);
+
+		}
+
+		if(!command.compare("status"))   // show All Records
+		{
+			print(h);
+
+		}
+
+
 	}
 	return 0;
 }
